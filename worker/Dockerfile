@@ -1,8 +1,11 @@
-FROM node:20-alpine
+FROM node:20-bullseye-slim
 
 WORKDIR /usr/src/app
 
-RUN apk add --no-cache vips-dev fftw-dev libpng-dev libjpeg-turbo-dev libwebp-dev ffmpeg zip unzip
+RUN apt-get update && apt-get install -y --no-install-recommends \
+  build-essential python3 pkg-config \
+  libvips-dev ffmpeg zip unzip \
+  && rm -rf /var/lib/apt/lists/*
 
 COPY package*.json ./
 RUN npm install
