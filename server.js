@@ -91,11 +91,20 @@ app.post('/api/process', async (req, res) => {
 
     let pipeline = sharp(src, { animated: true });
     if (t.crop) {
-      // crop: expects { left, top, width, height } or { width, height, gravity }
+      // crop: expects { left, top, width, height } or { width, height, gravity, preserveAspect }
       if (t.crop.left != null) pipeline = pipeline.extract({ left: t.crop.left, top: t.crop.top, width: t.crop.width, height: t.crop.height });
-      else if (t.crop.width && t.crop.height && t.crop.gravity) pipeline = pipeline.resize(t.crop.width, t.crop.height, { position: t.crop.gravity });
+      else if (t.crop.width && t.crop.height && t.crop.gravity) {
+        // when gravity-based crop is requested, use resize with fit depending on preserveAspect
+        const fitMode = t.crop.preserveAspect === false ? 'fill' : 'cover';
+        pipeline = pipeline.resize(t.crop.width, t.crop.height, { position: t.crop.gravity, fit: fitMode });
+      }
     }
-    if (t.width || t.height) pipeline = pipeline.resize(t.width || null, t.height || null, { fit: t.crop ? 'cover' : 'inside' });
+    if (t.width || t.height) {
+      // when resizing after crop, respect preserveAspect if provided
+      const preserve = t.crop && typeof t.crop.preserveAspect !== 'undefined' ? t.crop.preserveAspect : true;
+      const fit = preserve ? 'inside' : 'fill';
+      pipeline = pipeline.resize(t.width || null, t.height || null, { fit });
+    }
 
     const outName = `${outNameBase}.${ext}`;
     const outPath = path.join(outputs, outName);

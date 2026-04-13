@@ -14,6 +14,7 @@ function render() {
       Width: <input data-idx="${idx}" class="width" size="4" />
       Height: <input data-idx="${idx}" class="height" size="4" />
       Crop: <input data-idx="${idx}" class="crop" placeholder='e.g. 10,10,100,100 or gravity:north' />
+      Preserve aspect: <input type="checkbox" data-idx="${idx}" class="preserve" />
     `;
     filesDiv.appendChild(div);
   });
@@ -83,9 +84,10 @@ document.getElementById('process').addEventListener('click', async ()=>{
     const width = parseInt(document.querySelector(`.width[data-idx='${idx}']`).value) || null;
     const height = parseInt(document.querySelector(`.height[data-idx='${idx}']`).value) || null;
     const cropVal = document.querySelector(`.crop[data-idx='${idx}']`).value || '';
+    const preserve = !!document.querySelector(`.preserve[data-idx='${idx}']`).checked;
     let crop = null;
-    if (cropVal.startsWith('gravity:')) { const g = cropVal.split(':')[1]; crop = { width, height, gravity: g }; }
-    else if (cropVal.includes(',')) { const p = cropVal.split(',').map(Number); crop = { left: p[0], top: p[1], width: p[2], height: p[3] }; }
+    if (cropVal.startsWith('gravity:')) { const g = cropVal.split(':')[1]; crop = { width, height, gravity: g, preserveAspect: preserve }; }
+    else if (cropVal.includes(',')) { const p = cropVal.split(',').map(Number); crop = { left: p[0], top: p[1], width: p[2], height: p[3], preserveAspect: preserve }; }
     return { name: it.name, action: 'convert', toFormat: format, width, height, crop };
   });
   const res = await fetch('/api/process', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({ tasks }) });
