@@ -13,6 +13,29 @@ const port = process.env.PORT || 3000;
 app.use(express.static('public'));
 app.use(express.json());
 
+// Remove or block problematic Permissions-Policy / Permission-Policy headers
+// This prevents browsers from logging warnings about unrecognized or origin-trial features
+app.use((req, res, next) => {
+  try {
+    // remove any already-set header
+    if (typeof res.removeHeader === 'function') {
+      res.removeHeader('Permissions-Policy');
+      res.removeHeader('Permission-Policy');
+      res.removeHeader('Sec-Permissions-Policy');
+    }
+    // prevent future sets of these headers by overriding setHeader
+    const originalSet = res.setHeader.bind(res);
+    res.setHeader = (name, value) => {
+      const n = String(name).toLowerCase();
+      if (n === 'permissions-policy' || n === 'permission-policy' || n === 'sec-permissions-policy') return;
+      return originalSet(name, value);
+    };
+  } catch (e) {
+    // ignore
+  }
+  next();
+});
+
 const storageDir = path.join(__dirname, 'storage');
 const originals = path.join(storageDir, 'originals');
 const outputs = path.join(storageDir, 'outputs');

@@ -3,18 +3,21 @@ const picker = document.getElementById('filepicker');
 const filesDiv = document.getElementById('files');
 let items = [];
 
+const defaultPreserveCheckbox = document.getElementById('defaultPreserve');
+
 function render() {
   filesDiv.innerHTML = '';
   items.forEach((it, idx) => {
     const div = document.createElement('div');
     div.className = 'file';
+    const checked = it.preserve ? 'checked' : '';
     div.innerHTML = `
       <strong>${it.name}</strong><br>
       Format: <select data-idx="${idx}" class="format"><option>png</option><option>jpg</option><option>webp</option><option>heic</option></select>
       Width: <input data-idx="${idx}" class="width" size="4" />
       Height: <input data-idx="${idx}" class="height" size="4" />
       Crop: <input data-idx="${idx}" class="crop" placeholder='e.g. 10,10,100,100 or gravity:north' />
-      Preserve aspect: <input type="checkbox" data-idx="${idx}" class="preserve" checked />
+      Preserve aspect: <input type="checkbox" data-idx="${idx}" class="preserve" ${checked} />
     `;
     filesDiv.appendChild(div);
   });
@@ -27,7 +30,7 @@ function handleFiles(files) {
   const form = new FormData();
   for (const f of files) form.append('files', f, f.name);
   fetch('/api/upload', { method: 'POST', body: form }).then(r=>r.json()).then(list=>{
-    list.forEach(l=>items.push({ name: l.saved }));
+    list.forEach(l=>items.push({ name: l.saved, preserve: defaultPreserveCheckbox.checked }));
     render();
   });
 }
