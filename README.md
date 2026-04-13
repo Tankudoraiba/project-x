@@ -1,11 +1,9 @@
-# project-x
+Minimal Image Tool
 
-Image processing service (resize/convert/crop/batch) scaffolded with Docker.
+Run:
 
-Quick start:
+  docker-compose up --build
 
-1. docker-compose up --build
-2. Frontend: http://localhost:5173
-3. API: http://localhost:3000
+Open http://localhost:3000
 
-Storage is persisted to ./data
+Features: upload, convert, resize, crop, GIF frames to zip, persistent storage in ./storage

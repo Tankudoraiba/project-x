@@ -1,52 +1,10 @@
 version: '3.8'
 services:
-  redis:
-    image: redis:7-alpine
-    volumes:
-      - redis-data:/data
-  db:
-    image: postgres:15-alpine
-    environment:
-      POSTGRES_USER: app
-      POSTGRES_PASSWORD: pass
-      POSTGRES_DB: app
-    volumes:
-      - db-data:/var/lib/postgresql/data
-  api:
-    build: ./api
+  app:
+    build: .
     ports:
-      - "3001:3000"
+      - "3000:3000"
+    volumes:
+      - ./storage:/app/storage
     environment:
-      - REDIS_URL=redis://redis:6379
-      - DATABASE_URL=postgresql://app:pass@db:5432/app
       - PORT=3000
-    depends_on:
-      - redis
-      - db
-    volumes:
-      - ./data:/data
-  worker:
-    build: ./worker
-    depends_on:
-      - redis
-      - db
-    environment:
-      - REDIS_URL=redis://redis:6379
-    volumes:
-      - ./data:/data
-  frontend:
-    build: ./frontend
-    ports:
-      - "5174:5173"
-    depends_on:
-      - api
-  nginx:
-    image: nginx:alpine
-    ports:
-      - "8081:80"
-    volumes:
-      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
-volumes:
-  redis-data:
-  db-data:
-  data:
