@@ -4,7 +4,9 @@ const path = require('path');
 const fs = require('fs');
 const sharp = require('sharp');
 const archiver = require('archiver');
-const { decode } = require('heic-decode');
+// support both CommonJS and ESM-style default export from heic-decode
+const _heicDecode = require('heic-decode');
+const decode = (_heicDecode && (_heicDecode.default || _heicDecode)) || null;
 const mime = require('mime-types');
 
 const app = express();
@@ -41,6 +43,9 @@ const originals = path.join(storageDir, 'originals');
 const outputs = path.join(storageDir, 'outputs');
 const tmp = path.join(storageDir, 'tmp');
 [ storageDir, originals, outputs, tmp ].forEach(d => { if(!fs.existsSync(d)) fs.mkdirSync(d, { recursive: true }) });
+
+// serve storage (originals, outputs) over /storage
+app.use('/storage', express.static(storageDir));
 
 const upload = multer({ dest: tmp });
 
