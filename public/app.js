@@ -32,6 +32,51 @@ drop.addEventListener('drop', (e)=>{e.preventDefault(); handleFiles(e.dataTransf
 drop.addEventListener('dragover', (e)=>{e.preventDefault()});
 picker.addEventListener('change', (e)=>handleFiles(e.target.files));
 
+async function createDownloads(outputs) {
+  const outputsDiv = document.getElementById('outputs');
+  outputsDiv.innerHTML = '<h3>Processed outputs</h3>';
+  outputs.forEach((fname, i) => {
+    const div = document.createElement('div');
+    div.className = 'output';
+    const link = document.createElement('a');
+    link.href = '/storage/outputs/' + encodeURIComponent(fname);
+    link.textContent = fname;
+    link.target = '_blank';
+
+    const btn = document.createElement('button');
+    btn.textContent = 'Download';
+    btn.addEventListener('click', (e)=>{
+      e.preventDefault();
+      const a = document.createElement('a');
+      a.href = link.href;
+      a.download = fname;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+    });
+
+    div.appendChild(link);
+    div.appendChild(document.createTextNode(' '));
+    div.appendChild(btn);
+    outputsDiv.appendChild(div);
+  });
+
+  // Download All button action
+  const downloadAll = document.getElementById('downloadAll');
+  downloadAll.onclick = async ()=>{
+    for (const fname of outputs) {
+      const a = document.createElement('a');
+      a.href = '/storage/outputs/' + encodeURIComponent(fname);
+      a.download = fname;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      await new Promise(r=>setTimeout(r, 200));
+    }
+  };
+}
+
+// updated process handler
 document.getElementById('process').addEventListener('click', async ()=>{
   const tasks = items.map((it, idx)=>{
     const format = document.querySelector(`.format[data-idx='${idx}']`).value;
@@ -45,20 +90,6 @@ document.getElementById('process').addEventListener('click', async ()=>{
   });
   const res = await fetch('/api/process', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({ tasks }) });
   const j = await res.json();
-
-  // automatically download outputs
   const outputs = j.outputs || [];
-  for (const fname of outputs) {
-    const url = '/storage/outputs/' + encodeURIComponent(fname);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = fname;
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-    // small delay to reduce browser blocking of multiple downloads
-    await new Promise(r => setTimeout(r, 200));
-  }
-
-  if (outputs.length === 0) alert('No outputs created');
+  createDownloads(outputs);
 });
