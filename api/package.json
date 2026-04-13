@@ -1,0 +1,17 @@
+{
+  "name": "project-x-api",
+  "version": "0.1.0",
+  "main": "src/index.js",
+  "license": "MIT",
+  "scripts": {
+    "start": "node src/index.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "multer": "^1.4.5-lts.1",
+    "ioredis": "^5.3.2",
+    "bullmq": "^1.81.0",
+    "pg": "^8.11.0",
+    "uuid": "^9.0.0"
+  }
+}
