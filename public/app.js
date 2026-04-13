@@ -4,22 +4,45 @@ const filesDiv = document.getElementById('files');
 let items = [];
 
 const defaultPreserveCheckbox = document.getElementById('defaultPreserve');
+const statusSpan = document.getElementById('status');
+const outputsSidebar = document.getElementById('outputsSidebar');
 
 function render() {
   filesDiv.innerHTML = '';
   items.forEach((it, idx) => {
     const div = document.createElement('div');
     div.className = 'file';
-    const checked = it.preserve ? 'checked' : '';
-    div.innerHTML = `
+
+    const img = document.createElement('img');
+    img.className = 'thumb';
+    img.src = '/storage/originals/' + encodeURIComponent(it.name);
+    img.onclick = () => window.open(img.src, '_blank');
+
+    const meta = document.createElement('div');
+    meta.className = 'file-meta';
+    meta.innerHTML = `
       <strong>${it.name}</strong><br>
       Format: <select data-idx="${idx}" class="format"><option>png</option><option>jpg</option><option>webp</option><option>heic</option></select>
       Width: <input data-idx="${idx}" class="width" size="4" />
       Height: <input data-idx="${idx}" class="height" size="4" />
-      Preserve aspect: <input type="checkbox" data-idx="${idx}" class="preserve" ${checked} />
+      Preserve: <input type="checkbox" data-idx="${idx}" class="preserve" ${it.preserve ? 'checked' : ''} />
     `;
+
+    const actions = document.createElement('div');
+    actions.className = 'file-actions';
+    const removeBtn = document.createElement('button');
+    removeBtn.textContent = 'Remove';
+    removeBtn.onclick = () => { items.splice(idx, 1); render(); };
+    actions.appendChild(removeBtn);
+
+    div.appendChild(img);
+    div.appendChild(meta);
+    div.appendChild(actions);
     filesDiv.appendChild(div);
   });
+
+  // disable process if no items
+  document.getElementById('process').disabled = items.length === 0;
 }
 
 // ensure UI renders on load
@@ -31,7 +54,7 @@ function handleFiles(files) {
   fetch('/api/upload', { method: 'POST', body: form }).then(r=>r.json()).then(list=>{
     list.forEach(l=>items.push({ name: l.saved, preserve: defaultPreserveCheckbox.checked }));
     render();
-  });
+  }).catch(e=>{ console.error(e); statusSpan.textContent = 'Upload failed'; });
 }
 
 drop.addEventListener('drop', (e)=>{e.preventDefault(); handleFiles(e.dataTransfer.files)});
@@ -41,6 +64,7 @@ picker.addEventListener('change', (e)=>handleFiles(e.target.files));
 async function createDownloads(outputs) {
   const outputsDiv = document.getElementById('outputs');
   outputsDiv.innerHTML = '<h3>Processed outputs</h3>';
+  outputsSidebar.innerHTML = '';
   outputs.forEach((fname, i) => {
     const div = document.createElement('div');
     div.className = 'output';
@@ -65,6 +89,12 @@ async function createDownloads(outputs) {
     div.appendChild(document.createTextNode(' '));
     div.appendChild(btn);
     outputsDiv.appendChild(div);
+
+    // sidebar entry
+    const s = document.createElement('div');
+    s.className = 'small muted';
+    s.textContent = fname;
+    outputsSidebar.appendChild(s);
   });
 
   // Download All button action
@@ -84,15 +114,24 @@ async function createDownloads(outputs) {
 
 // updated process handler
 document.getElementById('process').addEventListener('click', async ()=>{
+  statusSpan.textContent = 'Processing...';
   const tasks = items.map((it, idx)=>{
     const format = document.querySelector(`.format[data-idx='${idx}']`).value;
-    const width = parseInt(document.querySelector(`.width[data-idx='${idx}']`).value) || null;
-    const height = parseInt(document.querySelector(`.height[data-idx='${idx}']`).value) || null;
+    const widthVal = document.querySelector(`.width[data-idx='${idx}']`).value;
+    const heightVal = document.querySelector(`.height[data-idx='${idx}']`).value;
+    const width = widthVal ? parseInt(widthVal) : null;
+    const height = heightVal ? parseInt(heightVal) : null;
     const preserve = !!document.querySelector(`.preserve[data-idx='${idx}']`).checked;
     return { name: it.name, action: 'convert', toFormat: format, width, height, preserve };
   });
-  const res = await fetch('/api/process', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({ tasks }) });
-  const j = await res.json();
-  const outputs = j.outputs || [];
-  createDownloads(outputs);
+  try{
+    const res = await fetch('/api/process', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({ tasks }) });
+    const j = await res.json();
+    const outputs = j.outputs || [];
+    createDownloads(outputs);
+    statusSpan.textContent = 'Done';
+  }catch(e){
+    console.error(e);
+    statusSpan.textContent = 'Processing failed';
+  }
 });

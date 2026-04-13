@@ -4,22 +4,58 @@
   <meta charset="utf-8">
   <title>Image Tool</title>
   <style>
-    body{font-family:Arial;margin:20px}
-    #drop{border:2px dashed #999;padding:20px;text-align:center}
-    .file{border:1px solid #ddd;padding:8px;margin:8px}
-    #outputs{margin-top:20px}
-    .output{padding:6px;border:1px solid #ccc;margin:6px}
+    body{font-family:Arial,Helvetica,sans-serif;margin:20px;color:#222}
+    .container{display:grid;grid-template-columns:1fr 380px;gap:20px;align-items:start}
+    header{display:flex;justify-content:space-between;align-items:center}
+    #drop{border:2px dashed #999;padding:16px;text-align:center;border-radius:8px;background:#fafafa}
+    .controls{padding:12px;border:1px solid #eee;border-radius:8px;background:#fff}
+    .file{border:1px solid #ddd;padding:8px;margin:8px;display:flex;gap:8px;align-items:center;border-radius:6px;background:#fff}
+    .thumb{width:72px;height:72px;object-fit:cover;border-radius:4px;border:1px solid #ddd}
+    .file-meta{flex:1}
+    .file-actions{display:flex;flex-direction:column;gap:6px}
+    #files{max-height:420px;overflow:auto;padding:6px}
+    #outputs{margin-top:12px}
+    .output{padding:8px;border:1px solid #ccc;margin:6px;border-radius:6px;background:#fff}
+    button{cursor:pointer}
+    .muted{color:#666;font-size:13px}
+    .small{font-size:13px}
+    @media (max-width:900px){
+      .container{grid-template-columns:1fr}
+    }
   </style>
 </head>
 <body>
-  <h1>Simple Image Tool</h1>
-  <div id="drop">Drop files here or <input id="filepicker" type="file" multiple></div>
-  <div style="margin-top:8px">Default preserve aspect: <input type="checkbox" id="defaultPreserve" checked></div>
-  <div id="files"></div>
-  <button id="process">Process All</button>
-  <button id="downloadAll" style="margin-left:8px">Download All</button>
+  <header>
+    <h1>Simple Image Tool</h1>
+    <div class="muted">Open the Save/Outputs panel after processing</div>
+  </header>
 
-  <div id="outputs"></div>
+  <div class="container">
+    <div>
+      <div id="drop">Drop files here or <input id="filepicker" type="file" multiple></div>
+      <div style="margin-top:8px" class="small">Default preserve aspect: <input type="checkbox" id="defaultPreserve" checked></div>
+
+      <div id="files" style="margin-top:12px"></div>
+
+      <div style="margin-top:8px">
+        <button id="process">Process All</button>
+        <button id="downloadAll" style="margin-left:8px">Download All</button>
+        <span id="status" class="muted" style="margin-left:12px"></span>
+      </div>
+
+      <div id="outputs"></div>
+    </div>
+
+    <aside class="controls">
+      <h3 class="small">Preview / Controls</h3>
+      <div class="muted small">Click a thumbnail to open original. Remove items to avoid processing them.</div>
+      <div style="margin-top:12px">
+        <strong>Processed outputs</strong>
+        <div id="outputsSidebar" style="margin-top:8px"></div>
+      </div>
+    </aside>
+  </div>
+
   <script src="/app.js"></script>
 </body>
 </html>
