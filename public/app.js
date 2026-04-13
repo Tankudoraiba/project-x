@@ -14,11 +14,14 @@ function render() {
       Width: <input data-idx="${idx}" class="width" size="4" />
       Height: <input data-idx="${idx}" class="height" size="4" />
       Crop: <input data-idx="${idx}" class="crop" placeholder='e.g. 10,10,100,100 or gravity:north' />
-      Preserve aspect: <input type="checkbox" data-idx="${idx}" class="preserve" />
+      Preserve aspect: <input type="checkbox" data-idx="${idx}" class="preserve" checked />
     `;
     filesDiv.appendChild(div);
   });
 }
+
+// ensure UI renders on load
+render();
 
 function handleFiles(files) {
   const form = new FormData();
