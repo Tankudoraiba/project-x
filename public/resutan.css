@@ -16,18 +16,17 @@ h1{margin:0;font-size:20px;padding-left:6px}
 .main-col{max-width:980px;width:100%;}
 #drop{border:2px dashed rgba(100,110,120,0.2);padding:16px;text-align:center;border-radius:12px;background:linear-gradient(180deg,rgba(255,255,255,0.6),rgba(255,255,255,0.4));box-shadow:var(--shadow)}
 .controls{padding:14px;border:1px solid rgba(20,30,60,0.04);border-radius:12px;background:var(--card);box-shadow:var(--shadow)}
-.file{border:1px solid rgba(20,30,60,0.06);padding:10px;margin:10px;display:flex;gap:12px;align-items:center;border-radius:10px;background:linear-gradient(180deg,#fff,#fff);
-  transition:transform .18s ease,box-shadow .18s ease;min-height:110px}
+.file{border:1px solid rgba(20,30,60,0.06);padding:12px;margin:6px;display:grid;grid-template-columns:96px 1fr 80px;gap:12px;align-items:center;border-radius:10px;background:linear-gradient(180deg,#fff,#fff);
+  transition:transform .18s ease,box-shadow .18s ease}
 .file:hover{transform:translateY(-4px);box-shadow:0 18px 40px rgba(15,25,40,0.08)}
-.thumb{width:84px;height:84px;object-fit:cover;border-radius:8px;border:2px solid rgba(0,0,0,0.03);flex-shrink:0}
-.file-meta{flex:1;display:flex;flex-direction:column;gap:6px;min-width:0}
-.file-meta strong{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.file-meta .row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
-.file-actions{display:flex;flex-direction:column;gap:6px;flex:0 0 auto;align-items:flex-end}
-.file-actions button{padding:6px 10px;font-size:13px}
-#files{display:grid;grid-template-columns:repeat(2,minmax(300px,1fr));gap:12px;align-items:start;margin-top:12px}
+.thumb{width:84px;height:84px;object-fit:cover;border-radius:8px;border:2px solid rgba(0,0,0,0.03)}
+.file-meta{flex:1}
+.file-actions{display:flex;flex-direction:column;gap:6px;align-items:center;justify-content:center}
+.controls-row{display:flex;gap:8px;align-items:center;justify-content:flex-start;flex-wrap:wrap}
+.file-title{font-size:14px;margin-bottom:6px}
+#files{display:grid;grid-template-columns:repeat(2,minmax(280px,1fr));gap:12px;align-items:start;margin-top:12px}
 #outputs{margin-top:14px}
-.output{padding:10px;border:1px solid rgba(20,30,60,0.06);margin:6px;border-radius:10px;background:var(--card);display:flex;align-items:center;gap:10px}
+.output{padding:10px;border:1px solid rgba(20,30,60,0.06);margin:6px;border-radius:10px;background:var(--card)}
 button{cursor:pointer;border:0;padding:8px 12px;border-radius:10px;background:linear-gradient(90deg,var(--accent),var(--accent2));color:white;font-weight:600}
 button.secondary{background:#eef6fa;color:#0c2940;border:1px solid rgba(12,40,64,0.06)}
 .muted{color:var(--muted);font-size:13px}
@@ -37,19 +36,11 @@ input[type="text"], input[type="number"], select{padding:6px 8px;border:1px soli
 .settings .small{margin-right:6px}
 .actions{display:flex;gap:8px;align-items:center;margin-top:10px}
 
-/* constrain inline inputs inside file cards */
-.file-meta input, .file-meta select {max-width:120px}
-.file-meta input.width, .file-meta input.height {width:80px}
-
-/* ensure outputs order: show button first then filename/link */
-.output a{order:2;text-decoration:none;color:var(--text)}
-.output button{order:1}
-
 @media (max-width:900px){
   .container{padding:10px}
   #files{grid-template-columns:1fr}
   .thumb{width:64px;height:64px}
   .logo{width:48px;height:48px;font-size:18px}
-  .file{min-height:90px;padding:8px}
-  .file-meta input, .file-meta select {max-width:100%}
+  .file{grid-template-columns:72px 1fr 64px}
+  .file-title{font-size:13px}
 }

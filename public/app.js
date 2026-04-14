@@ -25,11 +25,15 @@ function render() {
     const meta = document.createElement('div');
     meta.className = 'file-meta';
     meta.innerHTML = `
-      <strong>${it.name}</strong><br>
-      Format: <select data-idx="${idx}" class="format"><option ${it.format==='png'?'selected':''}>png</option><option ${it.format==='jpg'?'selected':''}>jpg</option><option ${it.format==='webp'?'selected':''}>webp</option><option ${it.format==='heic'?'selected':''}>heic</option></select>
-      Width: <input data-idx="${idx}" class="width" size="4" value="${it.width || ''}" />
-      Height: <input data-idx="${idx}" class="height" size="4" value="${it.height || ''}" />
-      Preserve: <input type="checkbox" data-idx="${idx}" class="preserve" ${it.preserve ? 'checked' : ''} />
+      <div class="file-title"><strong>${it.name}</strong></div>
+      <div class="controls-row">
+        Width: <input data-idx="${idx}" class="width" size="6" value="${it.width || ''}" />
+        Height: <input data-idx="${idx}" class="height" size="6" value="${it.height || ''}" />
+      </div>
+      <div class="controls-row" style="margin-top:6px">
+        Format: <select data-idx="${idx}" class="format"><option ${it.format==='png'?'selected':''}>png</option><option ${it.format==='jpg'?'selected':''}>jpg</option><option ${it.format==='webp'?'selected':''}>webp</option><option ${it.format==='heic'?'selected':''}>heic</option></select>
+        Preserve: <input type="checkbox" data-idx="${idx}" class="preserve" ${it.preserve ? 'checked' : ''} />
+      </div>
     `;
 
     const actions = document.createElement('div');
@@ -74,26 +78,27 @@ async function createDownloads(outputs) {
   outputs.forEach((fname, i) => {
     const div = document.createElement('div');
     div.className = 'output';
-    const link = document.createElement('a');
-    link.href = '/storage/outputs/' + encodeURIComponent(fname);
-    link.textContent = fname;
-    link.target = '_blank';
 
     const btn = document.createElement('button');
     btn.textContent = 'Download';
     btn.addEventListener('click', (e)=>{
       e.preventDefault();
       const a = document.createElement('a');
-      a.href = link.href;
+      a.href = '/storage/outputs/' + encodeURIComponent(fname);
       a.download = fname;
       document.body.appendChild(a);
       a.click();
       a.remove();
     });
 
-    div.appendChild(link);
-    div.appendChild(document.createTextNode(' '));
+    const link = document.createElement('a');
+    link.href = '/storage/outputs/' + encodeURIComponent(fname);
+    link.textContent = fname;
+    link.target = '_blank';
+
     div.appendChild(btn);
+    div.appendChild(document.createTextNode(' '));
+    div.appendChild(link);
     outputsDiv.appendChild(div);
   });
 
