@@ -1,188 +1,515 @@
-:root{
-  --bg1:#fff7ff; --bg2:#f0fbff; --accent:#ff91b8; --accent2:#7bd7ff;
-  --card:#ffffff; --muted:#6b7785; --text:#0c1a25; --glass:rgba(255,255,255,0.6);
-  --radius:12px; --shadow: 0 10px 30px rgba(20,30,60,0.08);
-  --control-height:36px;
-  --control-padding:8px 12px;
-  --control-radius:10px;
-  --control-border:1px solid rgba(12,20,30,0.06);
-  --control-bg:linear-gradient(180deg,#fff,#fbfbff);
-  --control-focus:0 8px 24px rgba(123,215,255,0.12);
-  --control-shadow-inset:inset 0 1px 0 rgba(255,255,255,0.6);
+:root {
+    --bg1: #fff7ff;
+    --bg2: #f0fbff;
+    --accent: #ff91b8;
+    --accent2: #7bd7ff;
+    --card: #ffffff;
+    --muted: #6b7785;
+    --text: #0c1a25;
+    --glass: rgba(255, 255, 255, 0.6);
+    --radius: 12px;
+    --shadow: 0 10px 30px rgba(20, 30, 60, 0.08);
+    --control-height: 36px;
+    --control-padding: 8px 12px;
+    --control-radius: 10px;
+    --control-border: 1px solid rgba(12, 20, 30, 0.06);
+    --control-bg: linear-gradient(180deg, #fff, #fbfbff);
+    --control-focus: 0 8px 24px rgba(123, 215, 255, 0.12);
+    --control-shadow-inset: inset 0 1px 0 rgba(255, 255, 255, 0.6);
 }
-*{box-sizing:border-box}
-body{font-family:'Poppins', 'Noto Sans JP', Arial, sans-serif;background:linear-gradient(135deg,var(--bg1),var(--bg2));margin:0;color:var(--text);min-height:100vh}
-header{display:flex;justify-content:space-between;align-items:center;padding:18px 12px}
-.brand{display:flex;align-items:center;gap:12px}
-.logo{width:60px;height:60px;border-radius:14px;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;color:white;font-weight:800;box-shadow:var(--shadow);font-size:22px}
-h1{margin:0;font-size:20px;padding-left:6px}
-.subtitle{font-size:13px;color:var(--muted);margin-top:4px;padding-left:6px}
 
-.title-wrap{display:flex;flex-direction:column;gap:6px}
-.container{display:flex;justify-content:center;padding:18px}
-.main-col{max-width:980px;width:100%;}
-#drop{border:2px dashed rgba(100,110,120,0.2);padding:16px;text-align:center;border-radius:12px;background:linear-gradient(180deg,rgba(255,255,255,0.6),rgba(255,255,255,0.4));box-shadow:var(--shadow);display:flex;align-items:center;justify-content:center;gap:8px}
-#drop.dragover{background:linear-gradient(180deg,rgba(255,255,255,0.8),rgba(250,245,255,0.9));border-color:var(--accent2);transform:translateY(-2px)}
-.filepicker-label{display:inline-flex;align-items:center;gap:8px;cursor:pointer;padding:8px 12px;border-radius:10px;background:linear-gradient(90deg,var(--accent),var(--accent2));color:#fff;font-weight:700;border:1px solid rgba(255,255,255,0.06)}
-.filepicker-label input{display:none}
-.controls{padding:14px;border:1px solid rgba(20,30,60,0.04);border-radius:12px;background:var(--card);box-shadow:var(--shadow)}
-.file{border:1px solid rgba(20,30,60,0.06);padding:12px;margin:6px;display:grid;grid-template-columns:96px 1fr 80px;gap:12px;align-items:center;border-radius:10px;background:linear-gradient(180deg,#fff,#fff);
-  transition:transform .18s ease,box-shadow .18s ease}
-.file:hover{transform:translateY(-4px);box-shadow:0 18px 40px rgba(15,25,40,0.08)}
-.thumb{width:84px;height:84px;object-fit:cover;border-radius:8px;border:2px solid rgba(0,0,0,0.03)}
-.file-meta{flex:1}
-.file-meta label{display:inline-flex;align-items:center;gap:8px}
-.row-dim{display:flex;gap:12px;align-items:center}
-.row-dim label{min-width:0}
-.row-dim .width, .row-dim .height{width:6ch}
-.row-format{display:flex;gap:12px;align-items:center;margin-top:6px}
-.row-format select{min-width:88px}
-.file-actions{display:flex;flex-direction:column;gap:6px;align-items:center;justify-content:center}
-.controls-row{display:flex;gap:8px;align-items:center;justify-content:flex-start;flex-wrap:wrap}
-.file-title{font-size:14px;margin-bottom:6px}
-#files{display:grid;grid-template-columns:repeat(2,minmax(280px,1fr));gap:12px;align-items:start;margin-top:12px}
-#outputs{margin-top:14px}
-.output{padding:10px;border:1px solid rgba(20,30,60,0.06);margin:6px;border-radius:10px;background:var(--card)}
-button{cursor:pointer;border:0;padding:8px 12px;border-radius:10px;background:linear-gradient(90deg,var(--accent),var(--accent2));color:white;font-weight:600}
-button.secondary{background:#eef6fa;color:#0c2940;border:1px solid rgba(12,40,64,0.06)}
-.muted{color:var(--muted);font-size:13px}
-.small{font-size:13px}
+* {
+    box-sizing: border-box
+}
+
+body {
+    font-family: 'Poppins', 'Noto Sans JP', Arial, sans-serif;
+    background: linear-gradient(135deg, var(--bg1), var(--bg2));
+    margin: 0;
+    color: var(--text);
+    min-height: 100vh
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 18px 12px
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 12px
+}
+
+.logo {
+    width: 60px;
+    height: 60px;
+    border-radius: 14px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 800;
+    box-shadow: var(--shadow);
+    font-size: 22px
+}
+
+h1 {
+    margin: 0;
+    font-size: 20px;
+    padding-left: 6px
+}
+
+.subtitle {
+    font-size: 13px;
+    color: var(--muted);
+    margin-top: 4px;
+    padding-left: 6px
+}
+
+.title-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 6px
+}
+
+.container {
+    display: flex;
+    justify-content: center;
+    padding: 18px
+}
+
+.main-col {
+    max-width: 980px;
+    width: 100%;
+}
+
+#drop {
+    border: 2px dashed rgba(100, 110, 120, 0.2);
+    padding: 16px;
+    text-align: center;
+    border-radius: 12px;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0.4));
+    box-shadow: var(--shadow);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px
+}
+
+#drop.dragover {
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.8), rgba(250, 245, 255, 0.9));
+    border-color: var(--accent2);
+    transform: translateY(-2px)
+}
+
+.filepicker-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    padding: 8px 12px;
+    border-radius: 10px;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    color: #fff;
+    font-weight: 700;
+    border: 1px solid rgba(255, 255, 255, 0.06)
+}
+
+.filepicker-label input {
+    display: none
+}
+
+.controls {
+    padding: 14px;
+    border: 1px solid rgba(20, 30, 60, 0.04);
+    border-radius: 12px;
+    background: var(--card);
+    box-shadow: var(--shadow)
+}
+
+.file {
+    border: 1px solid rgba(20, 30, 60, 0.06);
+    padding: 12px;
+    margin: 6px;
+    display: grid;
+    grid-template-columns: 96px 1fr 80px;
+    gap: 12px;
+    align-items: center;
+    border-radius: 10px;
+    background: linear-gradient(180deg, #fff, #fff);
+    transition: transform .18s ease, box-shadow .18s ease
+}
+
+.file:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 18px 40px rgba(15, 25, 40, 0.08)
+}
+
+.thumb {
+    width: 84px;
+    height: 84px;
+    object-fit: cover;
+    border-radius: 8px;
+    border: 2px solid rgba(0, 0, 0, 0.03)
+}
+
+.file-meta {
+    flex: 1
+}
+
+.file-meta label {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px
+}
+
+.row-dim {
+    display: flex;
+    gap: 12px;
+    align-items: center
+}
+
+.row-dim label {
+    min-width: 0
+}
+
+.row-dim .width,
+.row-dim .height {
+    width: 6ch
+}
+
+.row-format {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    margin-top: 6px
+}
+
+.row-format select {
+    min-width: 88px
+}
+
+.file-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    align-items: center;
+    justify-content: center
+}
+
+.controls-row {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    justify-content: flex-start;
+    flex-wrap: wrap
+}
+
+.file-title {
+    font-size: 14px;
+    margin-bottom: 6px
+}
+
+#files {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(280px, 1fr));
+    gap: 12px;
+    align-items: start;
+    margin-top: 12px
+}
+
+#outputs {
+    margin-top: 14px
+}
+
+.output {
+    padding: 10px;
+    border: 1px solid rgba(20, 30, 60, 0.06);
+    margin: 6px;
+    border-radius: 10px;
+    background: var(--card)
+}
+
+button {
+    cursor: pointer;
+    border: 0;
+    padding: 8px 12px;
+    border-radius: 10px;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    color: white;
+    font-weight: 600
+}
+
+button.secondary {
+    background: #eef6fa;
+    color: #0c2940;
+    border: 1px solid rgba(12, 40, 64, 0.06)
+}
+
+.muted {
+    color: var(--muted);
+    font-size: 13px
+}
+
+.small {
+    font-size: 13px
+}
 
 /* Unified form control styles: consistent sizing, padding, radius, borders and focus/hover */
-input[type="text"], input[type="number"], input[type="search"], select,
-.file-meta input, .file-meta select, .settings input, .settings select,
-.controls-row input, button, .filepicker-label {
-  height: var(--control-height);
-  padding: var(--control-padding);
-  border-radius: var(--control-radius);
-  border: var(--control-border);
-  background: var(--control-bg);
-  box-shadow: var(--control-shadow-inset);
-  font-size: 13px;
-  color: var(--text);
-  transition: box-shadow .12s, border-color .12s, transform .06s, background .06s;
-  cursor: pointer;
+input[type="text"],
+input[type="number"],
+input[type="search"],
+select,
+.file-meta input,
+.file-meta select,
+.settings input,
+.settings select,
+.controls-row input,
+button,
+.filepicker-label {
+    height: var(--control-height);
+    padding: var(--control-padding);
+    border-radius: var(--control-radius);
+    border: var(--control-border);
+    background: var(--control-bg);
+    box-shadow: var(--control-shadow-inset);
+    font-size: 13px;
+    color: var(--text);
+    transition: box-shadow .12s, border-color .12s, transform .06s, background .06s;
+    cursor: pointer;
 }
 
 /* Primary buttons/filepicker keep the brand gradient but match sizing */
-button, .filepicker-label {
-  background: linear-gradient(90deg,var(--accent),var(--accent2));
-  color: #fff;
-  font-weight: 700;
-  border: none;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
+button,
+.filepicker-label {
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    color: #fff;
+    font-weight: 700;
+    border: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
 }
 
 /* Neutral small action inside file card remains subtle */
-.file-actions button{
-  background: linear-gradient(180deg,#fff,#f7f9fb);
-  color: var(--text);
-  border: 1px solid rgba(12,20,30,0.06);
-  padding:6px 10px;
-  height: auto;
-  box-shadow: none;
-  cursor: pointer;
-  font-weight:600;
+.file-actions button {
+    background: linear-gradient(180deg, #fff, #f7f9fb);
+    color: var(--text);
+    border: 1px solid rgba(12, 20, 30, 0.06);
+    padding: 6px 10px;
+    height: auto;
+    box-shadow: none;
+    cursor: pointer;
+    font-weight: 600;
 }
 
 /* Focus & hover states shared across controls */
-input[type="text"]:focus, input[type="number"]:focus, input[type="search"]:focus,
-select:focus, button:focus, .filepicker-label:focus, .file-meta input:focus, .file-meta select:focus {
-  outline: none;
-  border-color: var(--accent2);
-  box-shadow: var(--control-focus);
-  transform: translateY(-1px);
+input[type="text"]:focus,
+input[type="number"]:focus,
+input[type="search"]:focus,
+select:focus,
+button:focus,
+.filepicker-label:focus,
+.file-meta input:focus,
+.file-meta select:focus {
+    outline: none;
+    border-color: var(--accent2);
+    box-shadow: var(--control-focus);
+    transform: translateY(-1px);
 }
 
-button:hover, .filepicker-label:hover, input[type="text"]:hover, select:hover {
-  border-color: rgba(123,215,255,0.6);
-  box-shadow: 0 6px 18px rgba(123,215,255,0.04);
-  transform: translateY(-1px);
+button:hover,
+.filepicker-label:hover,
+input[type="text"]:hover,
+select:hover {
+    border-color: rgba(123, 215, 255, 0.6);
+    box-shadow: 0 6px 18px rgba(123, 215, 255, 0.04);
+    transform: translateY(-1px);
 }
 
 /* Preserve the custom caret and padding for selects */
-select, .file-meta select, .settings select {
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
-  padding-right: 40px; /* room for caret */
-  background-repeat: no-repeat;
-  background-position: calc(100% - 12px) center;
-  background-image: linear-gradient(45deg, transparent 50%, rgba(12,20,30,0.6) 50%), linear-gradient(135deg, rgba(12,20,30,0.6) 50%, transparent 50%);
-  background-size: 6px 6px, 6px 6px;
+select,
+.file-meta select,
+.settings select {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    padding-right: 40px;
+    /* room for caret */
+    background-repeat: no-repeat;
+    background-position: calc(100% - 12px) center;
+    background-image: linear-gradient(45deg, transparent 50%, rgba(12, 20, 30, 0.6) 50%), linear-gradient(135deg, rgba(12, 20, 30, 0.6) 50%, transparent 50%);
+    background-size: 6px 6px, 6px 6px;
 }
 
 /* Keep smaller selects in rows consistent */
-.row-format select, .row-format .format { min-width:92px; padding-right:40px; height:var(--control-height); }
+.row-format select,
+.row-format .format {
+    min-width: 92px;
+    padding-right: 40px;
+    height: var(--control-height);
+}
 
 /* keep numeric inputs right-aligned like file controls */
-.file-meta input.width, .file-meta input.height, #defaultWidth, #defaultHeight { text-align: right; }
+.file-meta input.width,
+.file-meta input.height,
+#defaultWidth,
+#defaultHeight {
+    text-align: right;
+}
 
 /* Empty state */
-#files.empty{display:flex;align-items:center;justify-content:center;padding:24px;border-radius:10px;background:linear-gradient(180deg,rgba(255,255,255,0.6),rgba(255,255,255,0.4));border:1px dashed rgba(12,20,30,0.04)}
-#files.empty .empty-msg{color:var(--muted);font-size:15px}
+#files.empty {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    border-radius: 10px;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0.4));
+    border: 1px dashed rgba(12, 20, 30, 0.04)
+}
 
-@media (max-width:900px){
-  .container{padding:10px}
-  #files{grid-template-columns:1fr}
-  .thumb{width:64px;height:64px}
-  .logo{width:48px;height:48px;font-size:18px}
-  .file{grid-template-columns:72px 1fr 64px}
-  .file-title{font-size:13px}
+#files.empty .empty-msg {
+    color: var(--muted);
+    font-size: 15px
+}
+
+@media (max-width:900px) {
+    .container {
+        padding: 10px
+    }
+
+    #files {
+        grid-template-columns: 1fr
+    }
+
+    .thumb {
+        width: 64px;
+        height: 64px
+    }
+
+    .logo {
+        width: 48px;
+        height: 48px;
+        font-size: 18px
+    }
+
+    .file {
+        grid-template-columns: 72px 1fr 64px
+    }
+
+    .file-title {
+        font-size: 13px
+    }
 }
 
 /* custom select: reset native appearance and provide a reliable custom caret */
-select, .file-meta select, .settings select {
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
-  display: inline-block;
-  padding: 8px 40px 8px 10px; /* room for caret on right */
-  height: 36px;
-  line-height: 20px;
-  border-radius: 10px;
-  border: 1px solid rgba(12,20,30,0.08);
-  background-color: #fff;
-  background-image: linear-gradient(180deg,#fff,#fbfbff);
-  color: var(--text);
-  font-size: 13px;
-  box-shadow: inset 0 1px 0 rgba(255,255,255,0.6);
-  transition: box-shadow .12s, border-color .12s, transform .06s;
-  cursor: pointer;
-  background-repeat: no-repeat;
-  background-position: calc(100% - 12px) center;
-  /* caret drawn with two tiny gradients for wide browser support */
-  background-image: linear-gradient(45deg, transparent 50%, rgba(12,20,30,0.6) 50%), linear-gradient(135deg, rgba(12,20,30,0.6) 50%, transparent 50%);
-  background-size: 6px 6px, 6px 6px;
+select,
+.file-meta select,
+.settings select {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    display: inline-block;
+    padding: 8px 40px 8px 10px;
+    /* room for caret on right */
+    height: 36px;
+    line-height: 20px;
+    border-radius: 10px;
+    border: 1px solid rgba(12, 20, 30, 0.08);
+    background-color: #fff;
+    background-image: linear-gradient(180deg, #fff, #fbfbff);
+    color: var(--text);
+    font-size: 13px;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6);
+    transition: box-shadow .12s, border-color .12s, transform .06s;
+    cursor: pointer;
+    background-repeat: no-repeat;
+    background-position: calc(100% - 12px) center;
+    /* caret drawn with two tiny gradients for wide browser support */
+    background-image: linear-gradient(45deg, transparent 50%, rgba(12, 20, 30, 0.6) 50%), linear-gradient(135deg, rgba(12, 20, 30, 0.6) 50%, transparent 50%);
+    background-size: 6px 6px, 6px 6px;
 }
 
 /* remove default arrow in IE/Edge */
-select::-ms-expand { display: none; }
-/* remove inner focus ring in Firefox */
-select:-moz-focusring { color: transparent; text-shadow: 0 0 0 var(--text); }
-
-select:hover, .file-meta select:hover, .settings select:hover {
-  border-color: rgba(123,215,255,0.6);
-  box-shadow: 0 6px 18px rgba(123,215,255,0.04);
+select::-ms-expand {
+    display: none;
 }
 
-select:focus, .file-meta select:focus, .settings select:focus {
-  outline: none;
-  border-color: var(--accent2);
-  box-shadow: 0 8px 24px rgba(123,215,255,0.12);
-  transform: translateY(-1px);
+/* remove inner focus ring in Firefox */
+select:-moz-focusring {
+    color: transparent;
+    text-shadow: 0 0 0 var(--text);
+}
+
+select:hover,
+.file-meta select:hover,
+.settings select:hover {
+    border-color: rgba(123, 215, 255, 0.6);
+    box-shadow: 0 6px 18px rgba(123, 215, 255, 0.04);
+}
+
+select:focus,
+.file-meta select:focus,
+.settings select:focus {
+    outline: none;
+    border-color: var(--accent2);
+    box-shadow: 0 8px 24px rgba(123, 215, 255, 0.12);
+    transform: translateY(-1px);
 }
 
 /* smaller selects inside rows should keep consistent padding for the caret */
-.row-format select, .row-format .format { min-width:92px; padding-right:40px }
+.row-format select,
+.row-format .format {
+    min-width: 92px;
+    padding-right: 40px
+}
 
 /* select option visuals are browser-controlled; keep a neutral fallback */
-select option { background: #fff; color: var(--text); }
+select option {
+    background: #fff;
+    color: var(--text);
+}
 
 /* modern filepicker label as a proper button with focus style */
-.filepicker-label{
-  display:inline-flex;align-items:center;gap:8px;cursor:pointer;padding:8px 12px;border-radius:10px;background:linear-gradient(90deg,var(--accent),var(--accent2));color:#fff;font-weight:700;border:1px solid rgba(255,255,255,0.06);
+.filepicker-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    padding: 8px 12px;
+    border-radius: 10px;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    color: #fff;
+    font-weight: 700;
+    border: 1px solid rgba(255, 255, 255, 0.06);
 }
-.filepicker-label:focus, .filepicker-label:hover{box-shadow:0 10px 30px rgba(123,215,255,0.08);transform:translateY(-1px)}
+
+.filepicker-label:focus,
+.filepicker-label:hover {
+    box-shadow: 0 10px 30px rgba(123, 215, 255, 0.08);
+    transform: translateY(-1px)
+}
+
+/* Keep native checkboxes/radios from inheriting the uniform control height */
+input[type="checkbox"], input[type="radio"] {
+  height: auto; /* don't force 36px tall */
+  width: auto;
+  padding: 0;
+  margin: 0 8px 0 0; /* small spacing before label text */
+  vertical-align: middle;
+  transform: none;
+  box-shadow: none;
+  cursor: pointer;
+}
+
+/* Ensure label containers align controls centrally */
+.file-meta label, .settings .small, .controls-row label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
