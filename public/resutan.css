@@ -54,6 +54,7 @@ input[type="text"], input[type="number"], input[type="search"], select{
 .controls-row input, .controls-row select, .settings input, .settings select{width:auto}
 
 /* file card controls: match main app look, remove generic browser styling */
+.defaultWidth, .defaultHeight, 
 .file-meta input[type="text"], .file-meta input[type="number"],
 .file-meta input.width, .file-meta input.height, .file-meta select {
   padding:8px 10px;
@@ -108,7 +109,7 @@ input[type="text"], input[type="number"], input[type="search"], select{
 .row-dim .width, .row-dim .height, .row-format select{height:36px}
 
 /* settings controls should visually match file card controls */
-.defaultWidth .defaultHeight .settings input[type="text"], .settings input[type="number"], .settings select, .settings .filepicker-label{
+.settings input[type="text"], .settings input[type="number"], .settings select, .settings .filepicker-label{
   padding:8px 10px;
   border-radius:8px;
   border:1px solid rgba(12,20,30,0.06);
