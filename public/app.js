@@ -96,27 +96,14 @@ async function createDownloads(outputs) {
     div.appendChild(document.createTextNode(' '));
     div.appendChild(btn);
     outputsDiv.appendChild(div);
-
-    // sidebar entry
-    const s = document.createElement('div');
-    s.className = 'small muted';
-    s.textContent = fname;
-    outputsSidebar.appendChild(s);
   });
 
-  // Download All button action
-  const downloadAll = document.getElementById('downloadAll');
-  downloadAll.onclick = async ()=>{
-    for (const fname of outputs) {
-      const a = document.createElement('a');
-      a.href = '/storage/outputs/' + encodeURIComponent(fname);
-      a.download = fname;
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-      await new Promise(r=>setTimeout(r, 200));
-    }
-  };
+  // update sidebar with a concise count and quick action
+  const count = outputs.length;
+  const c = document.createElement('div');
+  c.className = 'small muted';
+  c.textContent = `${count} output(s)`;
+  outputsSidebar.appendChild(c);
 }
 
 // updated process handler
