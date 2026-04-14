@@ -4,41 +4,7 @@
   <meta charset="utf-8">
   <title>Resu-tan — Image Tool</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
-  <style>
-    :root{
-      --bg1:#fff7ff; --bg2:#f0fbff; --accent:#ff91b8; --accent2:#7bd7ff;
-      --card:#ffffff; --muted:#6b7785; --text:#0c1a25; --glass:rgba(255,255,255,0.6);
-      --radius:12px; --shadow: 0 10px 30px rgba(20,30,60,0.08);
-    }
-    *{box-sizing:border-box}
-    body{font-family:'Poppins', 'Noto Sans JP', Arial, sans-serif;background:linear-gradient(135deg,var(--bg1),var(--bg2));margin:20px;color:var(--text);min-height:100vh}
-    header{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
-    .brand{display:flex;align-items:center;gap:12px}
-    .logo{width:60px;height:60px;border-radius:14px;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;color:white;font-weight:800;box-shadow:var(--shadow);font-size:22px}
-    h1{margin:0;font-size:20px}
-    .subtitle{font-size:13px;color:var(--muted);margin-top:4px}
-
-    .container{display:grid;grid-template-columns:1fr 380px;gap:20px;align-items:start}
-    #drop{border:2px dashed rgba(100,110,120,0.2);padding:16px;text-align:center;border-radius:12px;background:linear-gradient(180deg,rgba(255,255,255,0.6),rgba(255,255,255,0.4));box-shadow:var(--shadow)}
-    .controls{padding:14px;border:1px solid rgba(20,30,60,0.04);border-radius:12px;background:var(--card);box-shadow:var(--shadow)}
-    .file{border:1px solid rgba(20,30,60,0.06);padding:10px;margin:10px;display:flex;gap:10px;align-items:center;border-radius:10px;background:linear-gradient(180deg,#fff,#fff);
-      transition:transform .18s ease,box-shadow .18s ease}
-    .file:hover{transform:translateY(-4px);box-shadow:0 18px 40px rgba(15,25,40,0.08)}
-    .thumb{width:84px;height:84px;object-fit:cover;border-radius:8px;border:2px solid rgba(0,0,0,0.03)}
-    .file-meta{flex:1}
-    .file-actions{display:flex;flex-direction:column;gap:6px}
-    #files{max-height:480px;overflow:auto;padding:8px}
-    #outputs{margin-top:14px}
-    .output{padding:10px;border:1px solid rgba(20,30,60,0.06);margin:6px;border-radius:10px;background:var(--card)}
-    button{cursor:pointer;border:0;padding:8px 12px;border-radius:10px;background:linear-gradient(90deg,var(--accent),var(--accent2));color:white;font-weight:600}
-    button.secondary{background:#eef6fa;color:#0c2940;border:1px solid rgba(12,40,64,0.06)}
-    .muted{color:var(--muted);font-size:13px}
-    .small{font-size:13px}
-    input[type="text"], input[type="number"], select{padding:6px 8px;border:1px solid rgba(12,20,30,0.06);border-radius:8px}
-    @media (max-width:900px){
-      .container{grid-template-columns:1fr}
-    }
-  </style>
+  <link rel="stylesheet" href="/styles.css">
 </head>
 <body>
   <header>
@@ -46,11 +12,10 @@
       <div class="logo">R</div>
       <h1>Resu-tan Image Tool</h1>
     </div>
-    <div class="muted">Open the Save/Outputs panel after processing</div>
   </header>
 
   <div class="container">
-    <div>
+    <div class="left-panel">
       <div id="drop">Drop files here or <input id="filepicker" type="file" multiple></div>
       <div style="margin-top:8px" class="small">Default preserve aspect: <input type="checkbox" id="defaultPreserve" checked></div>
       <div style="margin-top:6px" class="small">Default width: <input id="defaultWidth" size="6" placeholder="px" />
@@ -68,7 +33,7 @@
 
       <div id="outputs"></div>
     </div>
-
+ 
     <aside class="controls">
       <h3 class="small">Preview / Controls</h3>
       <div class="muted small">Click a thumbnail to open original. Remove items to avoid processing them.</div>
