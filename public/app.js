@@ -145,6 +145,7 @@ document.getElementById('process').addEventListener('click', async ()=>{
 applyDefaultsBtn.addEventListener('click', ()=>{
   const defaultW = parseInt(defaultWidthInput.value) || null;
   const defaultH = parseInt(defaultHeightInput.value) || null;
-  items = items.map(it => ({ ...it, width: defaultW, height: defaultH }));
+  const defaultPreserve = !!defaultPreserveCheckbox.checked;
+  items = items.map(it => ({ ...it, width: defaultW, height: defaultH, preserve: defaultPreserve }));
   render();
 });
