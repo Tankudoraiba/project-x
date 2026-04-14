@@ -6,6 +6,7 @@ let items = [];
 const defaultPreserveCheckbox = document.getElementById('defaultPreserve');
 const defaultWidthInput = document.getElementById('defaultWidth');
 const defaultHeightInput = document.getElementById('defaultHeight');
+const defaultFormatSelect = document.getElementById('defaultFormat');
 const applyDefaultsBtn = document.getElementById('applyDefaults');
 const statusSpan = document.getElementById('status');
 const outputsSidebar = document.getElementById('outputsSidebar');
@@ -25,7 +26,7 @@ function render() {
     meta.className = 'file-meta';
     meta.innerHTML = `
       <strong>${it.name}</strong><br>
-      Format: <select data-idx="${idx}" class="format"><option>png</option><option>jpg</option><option>webp</option><option>heic</option></select>
+      Format: <select data-idx="${idx}" class="format"><option ${it.format==='png'?'selected':''}>png</option><option ${it.format==='jpg'?'selected':''}>jpg</option><option ${it.format==='webp'?'selected':''}>webp</option><option ${it.format==='heic'?'selected':''}>heic</option></select>
       Width: <input data-idx="${idx}" class="width" size="4" value="${it.width || ''}" />
       Height: <input data-idx="${idx}" class="height" size="4" value="${it.height || ''}" />
       Preserve: <input type="checkbox" data-idx="${idx}" class="preserve" ${it.preserve ? 'checked' : ''} />
@@ -57,7 +58,8 @@ function handleFiles(files) {
   fetch('/api/upload', { method: 'POST', body: form }).then(r=>r.json()).then(list=>{
     const defaultW = parseInt(defaultWidthInput.value) || null;
     const defaultH = parseInt(defaultHeightInput.value) || null;
-    list.forEach(l=>items.push({ name: l.saved, preserve: defaultPreserveCheckbox.checked, width: defaultW, height: defaultH }));
+    const defaultFormat = defaultFormatSelect.value || 'png';
+    list.forEach(l=>items.push({ name: l.saved, preserve: defaultPreserveCheckbox.checked, width: defaultW, height: defaultH, format: defaultFormat }));
     render();
   }).catch(e=>{ console.error(e); statusSpan.textContent = 'Upload failed'; });
 }
@@ -146,6 +148,7 @@ applyDefaultsBtn.addEventListener('click', ()=>{
   const defaultW = parseInt(defaultWidthInput.value) || null;
   const defaultH = parseInt(defaultHeightInput.value) || null;
   const defaultPreserve = !!defaultPreserveCheckbox.checked;
-  items = items.map(it => ({ ...it, width: defaultW, height: defaultH, preserve: defaultPreserve }));
+  const defaultFormat = defaultFormatSelect.value || 'png';
+  items = items.map(it => ({ ...it, width: defaultW, height: defaultH, preserve: defaultPreserve, format: defaultFormat }));
   render();
 });
