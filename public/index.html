@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <title>Resu-tan — Image Tool</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/styles.css">
+  <link rel="stylesheet" href="/resutan.css">
 </head>
 <body>
   <header>
@@ -15,7 +15,7 @@
   </header>
 
   <div class="container">
-    <div class="left-panel">
+    <div>
       <div id="drop">Drop files here or <input id="filepicker" type="file" multiple></div>
       <div style="margin-top:8px" class="small">Default preserve aspect: <input type="checkbox" id="defaultPreserve" checked></div>
       <div style="margin-top:6px" class="small">Default width: <input id="defaultWidth" size="6" placeholder="px" />
@@ -33,7 +33,7 @@
 
       <div id="outputs"></div>
     </div>
- 
+
     <aside class="controls">
       <h3 class="small">Preview / Controls</h3>
       <div class="muted small">Click a thumbnail to open original. Remove items to avoid processing them.</div>
