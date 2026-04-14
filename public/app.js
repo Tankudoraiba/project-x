@@ -49,7 +49,7 @@ function render() {
     actions.className = 'file-actions';
     const removeBtn = document.createElement('button');
     removeBtn.textContent = 'Remove';
-    removeBtn.onclick = () => { items.splice(idx, 1); render(); };
+    removeBtn.onclick = () => { items.splice(idx, 1); render(); try { picker.value = ''; } catch(e){} };
     actions.appendChild(removeBtn);
 
     div.appendChild(img);
@@ -75,7 +75,9 @@ function handleFiles(files) {
     const defaultFormat = defaultFormatSelect.value || 'png';
     list.forEach(l=>items.push({ name: l.saved, preserve: defaultPreserveCheckbox.checked, width: defaultW, height: defaultH, format: defaultFormat }));
     render();
-  }).catch(e=>{ console.error(e); statusSpan.textContent = 'Upload failed'; });
+  }).catch(e=>{ console.error(e); statusSpan.textContent = 'Upload failed'; })
+  // ensure the file input is reset so selecting the same file again will fire change
+  .finally(()=>{ try { picker.value = ''; } catch(e){} });
 }
 
 drop.addEventListener('drop', (e)=>{e.preventDefault(); handleFiles(e.dataTransfer.files)});
