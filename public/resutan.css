@@ -16,16 +16,17 @@ h1{margin:0;font-size:20px;padding-left:6px}
 .main-col{max-width:980px;width:100%;}
 #drop{border:2px dashed rgba(100,110,120,0.2);padding:16px;text-align:center;border-radius:12px;background:linear-gradient(180deg,rgba(255,255,255,0.6),rgba(255,255,255,0.4));box-shadow:var(--shadow)}
 .controls{padding:14px;border:1px solid rgba(20,30,60,0.04);border-radius:12px;background:var(--card);box-shadow:var(--shadow)}
-.file{border:1px solid rgba(20,30,60,0.06);padding:10px;margin:10px;display:flex;gap:10px;align-items:center;border-radius:10px;background:linear-gradient(180deg,#fff,#fff);
-  transition:transform .18s ease,box-shadow .18s ease}
+.file{display:flex;gap:12px;align-items:flex-start;justify-content:space-between;padding:12px;border-radius:10px;background:linear-gradient(180deg,#fff,#fff);transition:transform .18s ease,box-shadow .18s ease;min-height:96px}
 .file:hover{transform:translateY(-4px);box-shadow:0 18px 40px rgba(15,25,40,0.08)}
-.thumb{width:84px;height:84px;object-fit:cover;border-radius:8px;border:2px solid rgba(0,0,0,0.03)}
-.file-meta{flex:1}
-.file-actions{display:flex;flex-direction:column;gap:6px}
+.thumb{flex:0 0 84px;width:84px;height:84px;object-fit:cover;border-radius:8px;border:2px solid rgba(0,0,0,0.03)}
+.file-meta{flex:1 1 auto;min-width:0;overflow:hidden}
+.file-meta strong{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:6px}
+.file-meta input, .file-meta select{max-width:120px}
+.file-actions{flex:0 0 auto;display:flex;flex-direction:column;gap:8px;align-items:flex-end}
 #files{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:10px;align-items:start;margin-top:12px}
 #outputs{margin-top:14px}
 .output{padding:10px;border:1px solid rgba(20,30,60,0.06);margin:6px;border-radius:10px;background:var(--card)}
-button{cursor:pointer;border:0;padding:8px 12px;border-radius:10px;background:linear-gradient(90deg,var(--accent),var(--accent2));color:white;font-weight:600}
+button{cursor:pointer;border:0;padding:8px 12px;border-radius:10px;background:linear-gradient(90deg,var(--accent),var(--accent2));color:white;font-weight:600;white-space:nowrap}
 button.secondary{background:#eef6fa;color:#0c2940;border:1px solid rgba(12,40,64,0.06)}
 .muted{color:var(--muted);font-size:13px}
 .small{font-size:13px}
@@ -39,4 +40,6 @@ input[type="text"], input[type="number"], select{padding:6px 8px;border:1px soli
   #files{grid-template-columns:1fr}
   .thumb{width:64px;height:64px}
   .logo{width:48px;height:48px;font-size:18px}
+  .file{min-height:84px;padding:10px}
+  .file-actions{align-items:flex-start}
 }
