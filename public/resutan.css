@@ -108,7 +108,7 @@ input[type="text"], input[type="number"], input[type="search"], select{
 .row-dim .width, .row-dim .height, .row-format select{height:36px}
 
 /* settings controls should visually match file card controls */
-.settings input[type="text"], .settings input[type="number"], .settings select, .settings .filepicker-label{
+.defaultWidth .defaultHeight .settings input[type="text"], .settings input[type="number"], .settings select, .settings .filepicker-label{
   padding:8px 10px;
   border-radius:8px;
   border:1px solid rgba(12,20,30,0.06);
