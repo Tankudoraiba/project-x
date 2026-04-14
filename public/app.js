@@ -9,7 +9,7 @@ const defaultHeightInput = document.getElementById('defaultHeight');
 const defaultFormatSelect = document.getElementById('defaultFormat');
 const applyDefaultsBtn = document.getElementById('applyDefaults');
 const statusSpan = document.getElementById('status');
-const outputsSidebar = document.getElementById('outputsSidebar');
+const outputsSidebar = null;
 
 function render() {
   filesDiv.innerHTML = '';
@@ -71,7 +71,6 @@ picker.addEventListener('change', (e)=>handleFiles(e.target.files));
 async function createDownloads(outputs) {
   const outputsDiv = document.getElementById('outputs');
   outputsDiv.innerHTML = '<h3>Processed outputs</h3>';
-  outputsSidebar.innerHTML = '';
   outputs.forEach((fname, i) => {
     const div = document.createElement('div');
     div.className = 'output';
@@ -98,12 +97,19 @@ async function createDownloads(outputs) {
     outputsDiv.appendChild(div);
   });
 
-  // update sidebar with a concise count and quick action
-  const count = outputs.length;
-  const c = document.createElement('div');
-  c.className = 'small muted';
-  c.textContent = `${count} output(s)`;
-  outputsSidebar.appendChild(c);
+  // Download All button action
+  const downloadAll = document.getElementById('downloadAll');
+  downloadAll.onclick = async ()=>{
+    for (const fname of outputs) {
+      const a = document.createElement('a');
+      a.href = '/storage/outputs/' + encodeURIComponent(fname);
+      a.download = fname;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      await new Promise(r=>setTimeout(r, 200));
+    }
+  };
 }
 
 // updated process handler
