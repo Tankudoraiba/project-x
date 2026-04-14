@@ -26,13 +26,13 @@ function render() {
     meta.className = 'file-meta';
     meta.innerHTML = `
       <div class="file-title"><strong>${it.name}</strong></div>
-      <div class="controls-row">
-        Width: <input data-idx="${idx}" class="width" size="6" value="${it.width || ''}" />
-        Height: <input data-idx="${idx}" class="height" size="6" value="${it.height || ''}" />
+      <div class="controls-row row-dim">
+        <label>Width: <input data-idx="${idx}" class="width" size="6" value="${it.width || ''}" /></label>
+        <label>Height: <input data-idx="${idx}" class="height" size="6" value="${it.height || ''}" /></label>
       </div>
-      <div class="controls-row" style="margin-top:6px">
-        Format: <select data-idx="${idx}" class="format"><option ${it.format==='png'?'selected':''}>png</option><option ${it.format==='jpg'?'selected':''}>jpg</option><option ${it.format==='webp'?'selected':''}>webp</option><option ${it.format==='heic'?'selected':''}>heic</option></select>
-        Preserve: <input type="checkbox" data-idx="${idx}" class="preserve" ${it.preserve ? 'checked' : ''} />
+      <div class="controls-row row-format">
+        <label>Format: <select data-idx="${idx}" class="format"><option ${it.format==='png'?'selected':''}>png</option><option ${it.format==='jpg'?'selected':''}>jpg</option><option ${it.format==='webp'?'selected':''}>webp</option><option ${it.format==='heic'?'selected':''}>heic</option></select></label>
+        <label style="display:flex;align-items:center;gap:6px">Preserve: <input type="checkbox" data-idx="${idx}" class="preserve" ${it.preserve ? 'checked' : ''} /></label>
       </div>
     `;
 
