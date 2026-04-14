@@ -16,7 +16,7 @@ h1{margin:0;font-size:20px;padding-left:6px}
 .main-col{max-width:980px;width:100%;}
 #drop{border:2px dashed rgba(100,110,120,0.2);padding:16px;text-align:center;border-radius:12px;background:linear-gradient(180deg,rgba(255,255,255,0.6),rgba(255,255,255,0.4));box-shadow:var(--shadow);display:flex;align-items:center;justify-content:center;gap:8px}
 #drop.dragover{background:linear-gradient(180deg,rgba(255,255,255,0.8),rgba(250,245,255,0.9));border-color:var(--accent2);transform:translateY(-2px)}
-.filepicker-label{display:inline-flex;align-items:center;gap:8px;cursor:pointer;padding:6px 10px;border-radius:8px;background:linear-gradient(90deg,var(--accent),var(--accent2));color:#fff;font-weight:600}
+.filepicker-label{display:inline-flex;align-items:center;gap:8px;cursor:pointer;padding:8px 12px;border-radius:10px;background:linear-gradient(90deg,var(--accent),var(--accent2));color:#fff;font-weight:700;border:1px solid rgba(255,255,255,0.06)}
 .filepicker-label input{display:none}
 .controls{padding:14px;border:1px solid rgba(20,30,60,0.04);border-radius:12px;background:var(--card);box-shadow:var(--shadow)}
 .file{border:1px solid rgba(20,30,60,0.06);padding:12px;margin:6px;display:grid;grid-template-columns:96px 1fr 80px;gap:12px;align-items:center;border-radius:10px;background:linear-gradient(180deg,#fff,#fff);
@@ -137,46 +137,56 @@ input[type="text"], input[type="number"], input[type="search"], select{
   .file-title{font-size:13px}
 }
 
-/* modern dropdown styling: app-themed selects with custom caret */
-.file-meta select.format, .settings select, select {
+/* custom select: reset native appearance and provide a reliable custom caret */
+select, .file-meta select, .settings select {
   -webkit-appearance: none;
+  -moz-appearance: none;
   appearance: none;
-  padding: 8px 36px 8px 10px; /* room for caret */
+  display: inline-block;
+  padding: 8px 40px 8px 10px; /* room for caret on right */
   height: 36px;
+  line-height: 20px;
   border-radius: 10px;
   border: 1px solid rgba(12,20,30,0.08);
-  background: linear-gradient(180deg,#fff,#fbfbff);
+  background-color: #fff;
+  background-image: linear-gradient(180deg,#fff,#fbfbff);
   color: var(--text);
   font-size: 13px;
   box-shadow: inset 0 1px 0 rgba(255,255,255,0.6);
   transition: box-shadow .12s, border-color .12s, transform .06s;
-  background-image: linear-gradient(45deg, transparent 50%, rgba(12,20,30,0.55) 50%), linear-gradient(135deg, rgba(12,20,30,0.55) 50%, transparent 50%);
-  background-position: calc(100% - 14px) calc(50% - 4px), calc(100% - 9px) calc(50% - 4px);
-  background-size: 6px 6px, 6px 6px;
+  cursor: pointer;
   background-repeat: no-repeat;
+  background-position: calc(100% - 12px) center;
+  /* caret drawn with two tiny gradients for wide browser support */
+  background-image: linear-gradient(45deg, transparent 50%, rgba(12,20,30,0.6) 50%), linear-gradient(135deg, rgba(12,20,30,0.6) 50%, transparent 50%);
+  background-size: 6px 6px, 6px 6px;
 }
 
-.file-meta select.format:hover, .settings select:hover, select:hover{
+/* remove default arrow in IE/Edge */
+select::-ms-expand { display: none; }
+/* remove inner focus ring in Firefox */
+select:-moz-focusring { color: transparent; text-shadow: 0 0 0 var(--text); }
+
+select:hover, .file-meta select:hover, .settings select:hover {
   border-color: rgba(123,215,255,0.6);
   box-shadow: 0 6px 18px rgba(123,215,255,0.04);
 }
 
-.file-meta select.format:focus, .settings select:focus, select:focus{
+select:focus, .file-meta select:focus, .settings select:focus {
   outline: none;
   border-color: var(--accent2);
   box-shadow: 0 8px 24px rgba(123,215,255,0.12);
   transform: translateY(-1px);
 }
 
-/* hide default IE/Edge dropdown arrow */
-select::-ms-expand { display: none; }
+/* smaller selects inside rows should keep consistent padding for the caret */
+.row-format select, .row-format .format { min-width:92px; padding-right:40px }
 
-/* options styling is limited across browsers; we provide a subtle neutral style */
-select option{
-  background: #fff;
-  color: var(--text);
-  padding: 6px 10px;
+/* select option visuals are browser-controlled; keep a neutral fallback */
+select option { background: #fff; color: var(--text); }
+
+/* modern filepicker label as a proper button with focus style */
+.filepicker-label{
+  display:inline-flex;align-items:center;gap:8px;cursor:pointer;padding:8px 12px;border-radius:10px;background:linear-gradient(90deg,var(--accent),var(--accent2));color:#fff;font-weight:700;border:1px solid rgba(255,255,255,0.06);
 }
-
-/* ensure formatting for small selects inside rows */
-.row-format select{ min-width:92px; padding-right:36px }
+.filepicker-label:focus, .filepicker-label:hover{box-shadow:0 10px 30px rgba(123,215,255,0.08);transform:translateY(-1px)}
