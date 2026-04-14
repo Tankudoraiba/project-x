@@ -51,8 +51,20 @@ input[type="text"], input[type="number"], input[type="search"], select{
   font-size:14px;
   box-sizing:border-box;
 }
-.controls-row input, .controls-row select, .settings input, .settings select{width:auto}
-
+select{
+  -webkit-appearance:none;
+  appearance:none;
+  padding-right:36px; /* room for custom arrow */
+  background-color:transparent;
+  background-image: linear-gradient(45deg, transparent 50%, currentColor 50%), linear-gradient(135deg, currentColor 50%, transparent 50%);
+  background-position: calc(100% - 18px) calc(50% - 3px), calc(100% - 13px) calc(50% - 3px);
+  background-size: 6px 6px, 6px 6px;
+  background-repeat: no-repeat;
+}
+/* hide IE/Edge native arrow */
+select::-ms-expand{ display:none }
+/* ensure settings and file selects match sizing */
+.settings select, .file-meta select { height:36px }
 /* file card controls: match main app look, remove generic browser styling */
 #defaultWidth, #defaultHeight, 
 .file-meta input[type="text"], .file-meta input[type="number"],
@@ -135,38 +147,4 @@ input[type="text"], input[type="number"], input[type="search"], select{
   .logo{width:48px;height:48px;font-size:18px}
   .file{grid-template-columns:72px 1fr 64px}
   .file-title{font-size:13px}
-}
-
-/* normalize all selects and add a custom arrow so dropdowns match app style */
-select, .file-meta select.format, .settings select, #defaultFormat, .row-format select {
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
-  background-color: transparent;
-  padding-right: 40px; /* room for custom arrow */
-  cursor: pointer;
-  position: relative;
-}
-
-/* custom arrow using layered gradients (works across modern browsers) */
-select {
-  background-image: linear-gradient(45deg, transparent 50%, rgba(12,20,30,0.6) 50%), linear-gradient(135deg, rgba(12,20,30,0.6) 50%, transparent 50%);
-  background-position: calc(100% - 18px) calc(50% - 4px), calc(100% - 12px) calc(50% - 4px);
-  background-size: 8px 8px, 8px 8px;
-  background-repeat: no-repeat;
-  border-radius:8px;
-}
-
-/* Ensure the select arrow doesn't overlap text on small widths */
-.row-format select, .file-meta select.format, .settings select, #defaultFormat {
-  min-width:88px;
-  height:36px;
-  line-height:36px;
-}
-
-/* keep focus visuals consistent */
-select:focus {
-  outline: none;
-  border-color: var(--accent2);
-  box-shadow: 0 6px 18px rgba(123,215,255,0.08), 0 0 0 4px rgba(123,215,255,0.08);
 }
