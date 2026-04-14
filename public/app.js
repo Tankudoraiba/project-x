@@ -74,25 +74,26 @@ async function createDownloads(outputs) {
   outputs.forEach((fname, i) => {
     const div = document.createElement('div');
     div.className = 'output';
+    const link = document.createElement('a');
+    link.href = '/storage/outputs/' + encodeURIComponent(fname);
+    link.textContent = fname;
+    link.target = '_blank';
+
     const btn = document.createElement('button');
     btn.textContent = 'Download';
-    const href = '/storage/outputs/' + encodeURIComponent(fname);
     btn.addEventListener('click', (e)=>{
       e.preventDefault();
       const a = document.createElement('a');
-      a.href = href;
+      a.href = link.href;
       a.download = fname;
       document.body.appendChild(a);
       a.click();
       a.remove();
     });
-    const link = document.createElement('a');
-    link.href = href;
-    link.textContent = fname;
-    link.target = '_blank';
-    div.appendChild(btn);
-    div.appendChild(document.createTextNode(' '));
+
     div.appendChild(link);
+    div.appendChild(document.createTextNode(' '));
+    div.appendChild(btn);
     outputsDiv.appendChild(div);
   });
 
