@@ -2,6 +2,13 @@
   --bg1:#fff7ff; --bg2:#f0fbff; --accent:#ff91b8; --accent2:#7bd7ff;
   --card:#ffffff; --muted:#6b7785; --text:#0c1a25; --glass:rgba(255,255,255,0.6);
   --radius:12px; --shadow: 0 10px 30px rgba(20,30,60,0.08);
+  --control-height:36px;
+  --control-padding:8px 12px;
+  --control-radius:10px;
+  --control-border:1px solid rgba(12,20,30,0.06);
+  --control-bg:linear-gradient(180deg,#fff,#fbfbff);
+  --control-focus:0 8px 24px rgba(123,215,255,0.12);
+  --control-shadow-inset:inset 0 1px 0 rgba(255,255,255,0.6);
 }
 *{box-sizing:border-box}
 body{font-family:'Poppins', 'Noto Sans JP', Arial, sans-serif;background:linear-gradient(135deg,var(--bg1),var(--bg2));margin:0;color:var(--text);min-height:100vh}
@@ -40,89 +47,78 @@ button{cursor:pointer;border:0;padding:8px 12px;border-radius:10px;background:li
 button.secondary{background:#eef6fa;color:#0c2940;border:1px solid rgba(12,40,64,0.06)}
 .muted{color:var(--muted);font-size:13px}
 .small{font-size:13px}
-input[type="text"], input[type="number"], input[type="search"], select{
-  padding:8px 10px;
-  border:1px solid rgba(12,20,30,0.08);
-  border-radius:8px;
-  background:linear-gradient(180deg,#fff,#fbfbff);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,0.6);
-  transition:box-shadow .12s, border-color .12s, transform .06s;
-  width:auto;
-  font-size:14px;
-  box-sizing:border-box;
-}
-.controls-row input, .controls-row select, .settings input, .settings select{width:auto}
 
-/* file card controls: match main app look, remove generic browser styling */
-#defaultWidth, #defaultHeight, 
-.file-meta input[type="text"], .file-meta input[type="number"],
-.file-meta input.width, .file-meta input.height, .file-meta select {
-  padding:8px 6px;
-  border-radius:8px;
-  border:1px solid rgba(12,20,30,0.06);
-  background:linear-gradient(180deg,#fff,#fbfbff);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,0.6);
-  transition:box-shadow .12s, border-color .12s, transform .06s;
-  font-size:13px;
-  color:var(--text);
+/* Unified form control styles: consistent sizing, padding, radius, borders and focus/hover */
+input[type="text"], input[type="number"], input[type="search"], select,
+.file-meta input, .file-meta select, .settings input, .settings select,
+.controls-row input, button, .filepicker-label {
+  height: var(--control-height);
+  padding: var(--control-padding);
+  border-radius: var(--control-radius);
+  border: var(--control-border);
+  background: var(--control-bg);
+  box-shadow: var(--control-shadow-inset);
+  font-size: 13px;
+  color: var(--text);
+  transition: box-shadow .12s, border-color .12s, transform .06s, background .06s;
+  cursor: pointer;
 }
 
-.file-meta input.width, .file-meta input.height{ text-align:right }
-
-.file-meta select.format{
-  -webkit-appearance:none;
-  appearance:none;
-  padding-right:30px;
-  min-width:96px;
-  position:relative;
-  color:var(--text);
+/* Primary buttons/filepicker keep the brand gradient but match sizing */
+button, .filepicker-label {
+  background: linear-gradient(90deg,var(--accent),var(--accent2));
+  color: #fff;
+  font-weight: 700;
+  border: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
-/* lightweight arrow for selects using layered gradients */
-.file-meta select.format{
-  background-image: linear-gradient(45deg, transparent 50%, currentColor 50%), linear-gradient(135deg, currentColor 50%, transparent 50%);
-  background-position: calc(100% - 14px) calc(50% - 4px), calc(100% - 9px) calc(50% - 4px);
-  background-size: 6px 6px, 6px 6px;
-  background-repeat: no-repeat;
+/* Neutral small action inside file card remains subtle */
+.file-actions button{
+  background: linear-gradient(180deg,#fff,#f7f9fb);
+  color: var(--text);
+  border: 1px solid rgba(12,20,30,0.06);
+  padding:6px 10px;
+  height: auto;
+  box-shadow: none;
+  cursor: pointer;
+  font-weight:600;
 }
 
-.file-meta input:focus, .file-meta select:focus, .settings input:focus, .settings select:focus{
+/* Focus & hover states shared across controls */
+input[type="text"]:focus, input[type="number"]:focus, input[type="search"]:focus,
+select:focus, button:focus, .filepicker-label:focus, .file-meta input:focus, .file-meta select:focus {
   outline: none;
   border-color: var(--accent2);
-  box-shadow: 0 6px 18px rgba(123,215,255,0.08), 0 0 0 4px rgba(123,215,255,0.08);
+  box-shadow: var(--control-focus);
   transform: translateY(-1px);
 }
 
-/* Remove button inside file card: smaller and neutral */
-.file-actions button{
-  background:linear-gradient(180deg,#fff,#f7f9fb);
-  color:var(--text);
-  border:1px solid rgba(12,20,30,0.06);
-  padding:6px 10px;
-  border-radius:8px;
-  box-shadow:none;
-  font-weight:600;
-}
-.file-actions button:hover{ box-shadow: 0 8px 20px rgba(15,25,40,0.06); transform:translateY(-2px) }
-
-/* ensure consistent sizing of control elements */
-.row-dim .width, .row-dim .height, .row-format select{height:36px}
-
-/* settings controls should visually match file card controls */
-.settings input[type="text"], .settings input[type="number"], .settings select, .settings .filepicker-label{
-  padding:8px 10px;
-  border-radius:8px;
-  border:1px solid rgba(12,20,30,0.06);
-  background:linear-gradient(180deg,#fff,#fbfbff);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,0.6);
-  transition:box-shadow .12s, border-color .12s, transform .06s;
-  font-size:13px;
-  color:var(--text);
-  height:36px;
+button:hover, .filepicker-label:hover, input[type="text"]:hover, select:hover {
+  border-color: rgba(123,215,255,0.6);
+  box-shadow: 0 6px 18px rgba(123,215,255,0.04);
+  transform: translateY(-1px);
 }
 
-/* keep number inputs right-aligned like file controls */
-#defaultWidth, #defaultHeight{ text-align:right }
+/* Preserve the custom caret and padding for selects */
+select, .file-meta select, .settings select {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  padding-right: 40px; /* room for caret */
+  background-repeat: no-repeat;
+  background-position: calc(100% - 12px) center;
+  background-image: linear-gradient(45deg, transparent 50%, rgba(12,20,30,0.6) 50%), linear-gradient(135deg, rgba(12,20,30,0.6) 50%, transparent 50%);
+  background-size: 6px 6px, 6px 6px;
+}
+
+/* Keep smaller selects in rows consistent */
+.row-format select, .row-format .format { min-width:92px; padding-right:40px; height:var(--control-height); }
+
+/* keep numeric inputs right-aligned like file controls */
+.file-meta input.width, .file-meta input.height, #defaultWidth, #defaultHeight { text-align: right; }
 
 /* Empty state */
 #files.empty{display:flex;align-items:center;justify-content:center;padding:24px;border-radius:10px;background:linear-gradient(180deg,rgba(255,255,255,0.6),rgba(255,255,255,0.4));border:1px dashed rgba(12,20,30,0.04)}
