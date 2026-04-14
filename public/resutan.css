@@ -72,44 +72,57 @@ input[type="text"], input[type="number"], input[type="search"], select{
 .file-meta select.format{
   -webkit-appearance:none;
   appearance:none;
-  padding-right:34px;
-  padding-left:10px;
+  padding-right:30px;
   min-width:96px;
   position:relative;
   color:var(--text);
-  background-color: transparent;
+}
+
+/* lightweight arrow for selects using layered gradients */
+.file-meta select.format{
+  background-image: linear-gradient(45deg, transparent 50%, currentColor 50%), linear-gradient(135deg, currentColor 50%, transparent 50%);
+  background-position: calc(100% - 14px) calc(50% - 4px), calc(100% - 9px) calc(50% - 4px);
+  background-size: 6px 6px, 6px 6px;
   background-repeat: no-repeat;
-  background-position: calc(100% - 12px) 50%;
-  background-size: 12px 12px;
 }
 
-/* custom SVG arrow (uses currentColor) */
-.file-meta select.format,
-.row-format select,
-.settings select,
-.controls-row select{
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24'><path fill='%236b7785' d='M7 10l5 5 5-5z'/></svg>");
-  -webkit-appearance:none;
-  -moz-appearance:none;
-  appearance:none;
-}
-
-/* hide IE/Edge default arrow */
-select::-ms-expand{ display:none }
-
-/* ensure consistent sizing */
-.row-format select, .file-meta select.format, .settings select{ height:36px; padding-top:0; padding-bottom:0 }
-
-/* hover and focus refinements for selects */
-.file-meta select.format:hover, .row-format select:hover, .settings select:hover{ border-color: rgba(12,20,30,0.12) }
-.file-meta select.format:focus, .row-format select:focus, .settings select:focus{
+.file-meta input:focus, .file-meta select:focus, .settings input:focus, .settings select:focus{
+  outline: none;
   border-color: var(--accent2);
-  box-shadow: 0 8px 24px rgba(123,215,255,0.06), 0 0 0 4px rgba(123,215,255,0.06);
+  box-shadow: 0 6px 18px rgba(123,215,255,0.08), 0 0 0 4px rgba(123,215,255,0.08);
   transform: translateY(-1px);
 }
 
-/* small visual polish for option list on supported browsers */
-select option{ padding:6px 10px }
+/* Remove button inside file card: smaller and neutral */
+.file-actions button{
+  background:linear-gradient(180deg,#fff,#f7f9fb);
+  color:var(--text);
+  border:1px solid rgba(12,20,30,0.06);
+  padding:6px 10px;
+  border-radius:8px;
+  box-shadow:none;
+  font-weight:600;
+}
+.file-actions button:hover{ box-shadow: 0 8px 20px rgba(15,25,40,0.06); transform:translateY(-2px) }
+
+/* ensure consistent sizing of control elements */
+.row-dim .width, .row-dim .height, .row-format select{height:36px}
+
+/* settings controls should visually match file card controls */
+.settings input[type="text"], .settings input[type="number"], .settings select, .settings .filepicker-label{
+  padding:8px 10px;
+  border-radius:8px;
+  border:1px solid rgba(12,20,30,0.06);
+  background:linear-gradient(180deg,#fff,#fbfbff);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,0.6);
+  transition:box-shadow .12s, border-color .12s, transform .06s;
+  font-size:13px;
+  color:var(--text);
+  height:36px;
+}
+
+/* keep number inputs right-aligned like file controls */
+#defaultWidth, #defaultHeight{ text-align:right }
 
 /* Empty state */
 #files.empty{display:flex;align-items:center;justify-content:center;padding:24px;border-radius:10px;background:linear-gradient(180deg,rgba(255,255,255,0.6),rgba(255,255,255,0.4));border:1px dashed rgba(12,20,30,0.04)}
@@ -123,3 +136,47 @@ select option{ padding:6px 10px }
   .file{grid-template-columns:72px 1fr 64px}
   .file-title{font-size:13px}
 }
+
+/* modern dropdown styling: app-themed selects with custom caret */
+.file-meta select.format, .settings select, select {
+  -webkit-appearance: none;
+  appearance: none;
+  padding: 8px 36px 8px 10px; /* room for caret */
+  height: 36px;
+  border-radius: 10px;
+  border: 1px solid rgba(12,20,30,0.08);
+  background: linear-gradient(180deg,#fff,#fbfbff);
+  color: var(--text);
+  font-size: 13px;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.6);
+  transition: box-shadow .12s, border-color .12s, transform .06s;
+  background-image: linear-gradient(45deg, transparent 50%, rgba(12,20,30,0.55) 50%), linear-gradient(135deg, rgba(12,20,30,0.55) 50%, transparent 50%);
+  background-position: calc(100% - 14px) calc(50% - 4px), calc(100% - 9px) calc(50% - 4px);
+  background-size: 6px 6px, 6px 6px;
+  background-repeat: no-repeat;
+}
+
+.file-meta select.format:hover, .settings select:hover, select:hover{
+  border-color: rgba(123,215,255,0.6);
+  box-shadow: 0 6px 18px rgba(123,215,255,0.04);
+}
+
+.file-meta select.format:focus, .settings select:focus, select:focus{
+  outline: none;
+  border-color: var(--accent2);
+  box-shadow: 0 8px 24px rgba(123,215,255,0.12);
+  transform: translateY(-1px);
+}
+
+/* hide default IE/Edge dropdown arrow */
+select::-ms-expand { display: none; }
+
+/* options styling is limited across browsers; we provide a subtle neutral style */
+select option{
+  background: #fff;
+  color: var(--text);
+  padding: 6px 10px;
+}
+
+/* ensure formatting for small selects inside rows */
+.row-format select{ min-width:92px; padding-right:36px }
