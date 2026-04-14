@@ -54,7 +54,7 @@ input[type="text"], input[type="number"], input[type="search"], select{
 .controls-row input, .controls-row select, .settings input, .settings select{width:auto}
 
 /* file card controls: match main app look, remove generic browser styling */
-.defaultWidth, .defaultHeight, 
+#defaultWidth, #defaultHeight, 
 .file-meta input[type="text"], .file-meta input[type="number"],
 .file-meta input.width, .file-meta input.height, .file-meta select {
   padding:8px 10px;
