@@ -18,14 +18,14 @@
   <div class="container">
     <div class="main-col">
       <div id="drop">Drop files here or
-        <label class="filepicker-label">choose files
+        <label class="filepicker-label" tabindex="0">choose files
           <input id="filepicker" type="file" multiple accept="image/*" />
         </label>
       </div>
       <div class="settings" style="margin-top:10px">
         <div class="small">Default preserve aspect: <input type="checkbox" id="defaultPreserve" checked></div>
-        <div class="small">Default width: <input id="defaultWidth" size="6" placeholder="px" />
-        Default height: <input id="defaultHeight" size="6" placeholder="px" />
+        <div class="small">Default width: <input id="defaultWidth" type="number" min="1" step="1" size="6" placeholder="px" />
+        Default height: <input id="defaultHeight" type="number" min="1" step="1" size="6" placeholder="px" />
         Default format: <select id="defaultFormat"><option value="png">png</option><option value="jpg">jpg</option><option value="webp">webp</option><option value="heic">heic</option></select>
         <button id="applyDefaults" style="margin-left:6px">Apply defaults to all</button></div>
       </div>
@@ -35,7 +35,7 @@
       <div class="actions" style="margin-top:8px">
         <button id="process">Process All</button>
         <button id="downloadAll" class="secondary" style="margin-left:8px">Download All</button>
-        <span id="status" class="muted" style="margin-left:12px"></span>
+        <span id="status" class="muted" style="margin-left:12px" aria-live="polite"></span>
       </div>
 
       <div id="outputs"></div>

@@ -29,6 +29,7 @@ function render() {
     const img = document.createElement('img');
     img.className = 'thumb';
     img.src = '/storage/originals/' + encodeURIComponent(it.name);
+    img.alt = it.name || 'uploaded image';
     img.onclick = () => window.open(img.src, '_blank');
 
     const meta = document.createElement('div');
@@ -36,8 +37,8 @@ function render() {
     meta.innerHTML = `
        <div class="file-title"><strong>${it.name}</strong></div>
        <div class="controls-row row-dim">
-         <label>Width: <input data-idx="${idx}" class="width" size="6" placeholder="px" value="${it.width || ''}" /></label>
-         <label>Height: <input data-idx="${idx}" class="height" size="6" placeholder="px" value="${it.height || ''}" /></label>
+         <label>Width: <input data-idx="${idx}" inputmode="numeric" pattern="[0-9]*" class="width" size="6" placeholder="px" value="${it.width || ''}" /></label>
+         <label>Height: <input data-idx="${idx}" inputmode="numeric" pattern="[0-9]*" class="height" size="6" placeholder="px" value="${it.height || ''}" /></label>
        </div>
        <div class="controls-row row-format">
         <select data-idx="${idx}" class="format"><option value="png" ${it.format==='png'?'selected':''}>png</option><option value="jpg" ${it.format==='jpg'?'selected':''}>jpg</option><option value="webp" ${it.format==='webp'?'selected':''}>webp</option><option value="heic" ${it.format==='heic'?'selected':''}>heic</option></select>
@@ -80,11 +81,22 @@ function handleFiles(files) {
   .finally(()=>{ try { picker.value = ''; } catch(e){} });
 }
 
-drop.addEventListener('dragenter', (e) => { e.preventDefault(); drop.classList.add('dragover'); });
-drop.addEventListener('dragover', (e) => { e.preventDefault(); drop.classList.add('dragover'); });
-drop.addEventListener('dragleave', (e) => { e.preventDefault(); drop.classList.remove('dragover'); });
-drop.addEventListener('drop', (e)=>{e.preventDefault(); drop.classList.remove('dragover'); handleFiles(e.dataTransfer.files)});
-picker.addEventListener('change', (e)=>handleFiles(e.target.files));
+
+// enhanced drag handling: add/remove visual 'dragover' class and ensure class is removed on drop
+drop.addEventListener('dragenter', (e)=>{ e.preventDefault(); drop.classList.add('dragover'); });
+drop.addEventListener('dragleave', (e)=>{ e.preventDefault(); drop.classList.remove('dragover'); });
+// Replace previous drop handler to also remove class
+drop.addEventListener('drop', (e)=>{ e.preventDefault(); drop.classList.remove('dragover'); handleFiles(e.dataTransfer.files); });
+// ensure dragover prevents default to allow drop
+drop.addEventListener('dragover', (e)=>{ e.preventDefault(); });
+
+// keyboard activation for the visible filepicker label
+const filepickerLabel = document.querySelector('.filepicker-label');
+if (filepickerLabel) {
+  filepickerLabel.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); try { picker.click(); } catch (err) {} }
+  });
+}
 
 async function createDownloads(outputs) {
   const outputsDiv = document.getElementById('outputs');
@@ -135,12 +147,12 @@ async function createDownloads(outputs) {
 document.getElementById('process').addEventListener('click', async ()=>{
   statusSpan.textContent = 'Processing...';
   const tasks = items.map((it, idx)=>{
-    const format = document.querySelector(`.format[data-idx='${idx}']`).value;
-    const widthVal = document.querySelector(`.width[data-idx='${idx}']`).value;
-    const heightVal = document.querySelector(`.height[data-idx='${idx}']`).value;
+    const format = document.querySelector(`.format[data-idx='${idx}']`)?.value || it.format || 'png';
+    const widthVal = document.querySelector(`.width[data-idx='${idx}']`)?.value;
+    const heightVal = document.querySelector(`.height[data-idx='${idx}']`)?.value;
     const width = widthVal ? parseInt(widthVal) : null;
     const height = heightVal ? parseInt(heightVal) : null;
-    const preserve = !!document.querySelector(`.preserve[data-idx='${idx}']`).checked;
+    const preserve = !!document.querySelector(`.preserve[data-idx='${idx}']`)?.checked;
     return { name: it.name, action: 'convert', toFormat: format, width, height, preserve };
   });
   try{
