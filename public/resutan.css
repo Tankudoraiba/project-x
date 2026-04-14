@@ -247,7 +247,8 @@ button {
 button.secondary {
     background: #eef6fa;
     color: #0c2940;
-    border: 1px solid rgba(12, 40, 64, 0.06)
+    border: 1px solid rgba(12, 40, 64, 0.06);
+    font-weight: 700;
 }
 
 .muted {
@@ -259,10 +260,11 @@ button.secondary {
     font-size: 13px
 }
 
-/* Unified form control styles: consistent sizing, padding, radius, borders and focus/hover */
+/* Consolidated form control styles: inputs, selects, buttons and filepicker */
 input[type="text"],
 input[type="number"],
 input[type="search"],
+textarea,
 select,
 .file-meta input,
 .file-meta select,
@@ -281,85 +283,98 @@ button,
     color: var(--text);
     transition: box-shadow .12s, border-color .12s, transform .06s, background .06s;
     cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
 }
 
-/* Primary buttons/filepicker keep the brand gradient but match sizing */
+/* Primary actions keep the brand gradient */
 button,
 .filepicker-label {
     background: linear-gradient(90deg, var(--accent), var(--accent2));
     color: #fff;
     font-weight: 700;
     border: none;
+}
+
+/* Subtle small actions inside file card */
+.file-actions button {
+    height: auto;
+    padding: 6px 10px;
+    background: linear-gradient(180deg, #fff, #f7f9fb);
+    color: var(--text);
+    border: 1px solid rgba(12, 20, 30, 0.06);
+    box-shadow: none;
+    cursor: pointer;
+    font-weight: 600;
     display: inline-flex;
     align-items: center;
     justify-content: center;
 }
 
-/* Neutral small action inside file card remains subtle */
-.file-actions button {
-    background: linear-gradient(180deg, #fff, #f7f9fb);
-    color: var(--text);
-    border: 1px solid rgba(12, 20, 30, 0.06);
-    padding: 6px 10px;
-    height: auto;
-    box-shadow: none;
-    cursor: pointer;
-    font-weight: 600;
-}
-
-/* Focus & hover states shared across controls */
-input[type="text"]:focus,
-input[type="number"]:focus,
-input[type="search"]:focus,
-select:focus,
-button:focus,
-.filepicker-label:focus,
-.file-meta input:focus,
-.file-meta select:focus {
-    outline: none;
-    border-color: var(--accent2);
-    box-shadow: var(--control-focus);
-    transform: translateY(-1px);
-}
-
-button:hover,
-.filepicker-label:hover,
-input[type="text"]:hover,
-select:hover {
-    border-color: rgba(123, 215, 255, 0.6);
-    box-shadow: 0 6px 18px rgba(123, 215, 255, 0.04);
-    transform: translateY(-1px);
-}
-
-/* Preserve the custom caret and padding for selects */
+/* Select-specific: remove native arrow, provide consistent padding and custom caret */
 select,
 .file-meta select,
 .settings select {
     -webkit-appearance: none;
     -moz-appearance: none;
     appearance: none;
-    padding-right: 40px;
-    /* room for caret */
+    padding: 8px 40px 8px 10px; /* room for caret */
+    height: var(--control-height);
+    line-height: 20px;
+    border-radius: var(--control-radius);
+    border: 1px solid rgba(12, 20, 30, 0.08);
+    background-color: #fff;
     background-repeat: no-repeat;
     background-position: calc(100% - 12px) center;
     background-image: linear-gradient(45deg, transparent 50%, rgba(12, 20, 30, 0.6) 50%), linear-gradient(135deg, rgba(12, 20, 30, 0.6) 50%, transparent 50%);
     background-size: 6px 6px, 6px 6px;
+    color: var(--text);
 }
 
-/* Keep smaller selects in rows consistent */
-.row-format select,
-.row-format .format {
-    min-width: 92px;
-    padding-right: 40px;
-    height: var(--control-height);
+/* Hover and focus states shared across controls */
+select:hover, .file-meta select:hover, .settings select:hover,
+button:hover, .filepicker-label:hover,
+input[type="text"]:hover, input[type="number"]:hover, input[type="search"]:hover {
+    border-color: rgba(123, 215, 255, 0.6);
+    box-shadow: 0 6px 18px rgba(123, 215, 255, 0.04);
+    transform: translateY(-1px);
 }
 
-/* keep numeric inputs right-aligned like file controls */
+select:focus, .file-meta select:focus,
+input[type="text"]:focus, input[type="number"]:focus, input[type="search"]:focus,
+button:focus, .filepicker-label:focus {
+    outline: none;
+    border-color: var(--accent2);
+    box-shadow: var(--control-focus);
+    transform: translateY(-1px);
+}
+
+/* Keep numeric inputs right-aligned like file controls */
 .file-meta input.width,
 .file-meta input.height,
 #defaultWidth,
 #defaultHeight {
     text-align: right;
+}
+
+/* Keep native checkboxes/radios from inheriting uniform control height */
+input[type="checkbox"], input[type="radio"] {
+  height: auto;
+  width: auto;
+  padding: 0;
+  margin: 0 8px 0 0;
+  vertical-align: middle;
+  transform: none;
+  box-shadow: none;
+  cursor: pointer;
+}
+
+/* Ensure label containers align controls centrally */
+.file-meta label, .settings .small, .controls-row label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
 }
 
 /* Empty state */
@@ -407,34 +422,6 @@ select,
     }
 }
 
-/* custom select: reset native appearance and provide a reliable custom caret */
-select,
-.file-meta select,
-.settings select {
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
-    display: inline-block;
-    padding: 8px 40px 8px 10px;
-    /* room for caret on right */
-    height: 36px;
-    line-height: 20px;
-    border-radius: 10px;
-    border: 1px solid rgba(12, 20, 30, 0.08);
-    background-color: #fff;
-    background-image: linear-gradient(180deg, #fff, #fbfbff);
-    color: var(--text);
-    font-size: 13px;
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6);
-    transition: box-shadow .12s, border-color .12s, transform .06s;
-    cursor: pointer;
-    background-repeat: no-repeat;
-    background-position: calc(100% - 12px) center;
-    /* caret drawn with two tiny gradients for wide browser support */
-    background-image: linear-gradient(45deg, transparent 50%, rgba(12, 20, 30, 0.6) 50%), linear-gradient(135deg, rgba(12, 20, 30, 0.6) 50%, transparent 50%);
-    background-size: 6px 6px, 6px 6px;
-}
-
 /* remove default arrow in IE/Edge */
 select::-ms-expand {
     display: none;
@@ -460,13 +447,6 @@ select:focus,
     border-color: var(--accent2);
     box-shadow: 0 8px 24px rgba(123, 215, 255, 0.12);
     transform: translateY(-1px);
-}
-
-/* smaller selects inside rows should keep consistent padding for the caret */
-.row-format select,
-.row-format .format {
-    min-width: 92px;
-    padding-right: 40px
 }
 
 /* select option visuals are browser-controlled; keep a neutral fallback */
