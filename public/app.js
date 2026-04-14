@@ -14,7 +14,7 @@ const statusSpan = document.getElementById('status');
 function renderEmptyState() {
   if (items.length === 0) {
     filesDiv.classList.add('empty');
-    filesDiv.innerHTML = '<div class="empty-msg">No files yet — drop images here or choose files.</div>';
+    filesDiv.innerHTML = '<div class="empty-msg">No files yet</div>';
   } else {
     filesDiv.classList.remove('empty');
   }
@@ -36,8 +36,8 @@ function render() {
     meta.innerHTML = `
        <div class="file-title"><strong>${it.name}</strong></div>
        <div class="controls-row row-dim">
-         <label>Width: <input data-idx="${idx}" class="width" size="6" value="${it.width || ''}" /></label>
-         <label>Height: <input data-idx="${idx}" class="height" size="6" value="${it.height || ''}" /></label>
+         <label>Width: <input data-idx="${idx}" class="width" size="6" placeholder="px" value="${it.width || ''}" /></label>
+         <label>Height: <input data-idx="${idx}" class="height" size="6" placeholder="px" value="${it.height || ''}" /></label>
        </div>
        <div class="controls-row row-format">
         <select data-idx="${idx}" class="format"><option value="png" ${it.format==='png'?'selected':''}>png</option><option value="jpg" ${it.format==='jpg'?'selected':''}>jpg</option><option value="webp" ${it.format==='webp'?'selected':''}>webp</option><option value="heic" ${it.format==='heic'?'selected':''}>heic</option></select>
