@@ -3,10 +3,16 @@
 <head>
   <meta charset="utf-8">
   <title>Image Tool</title>
+  <link rel="stylesheet" href="/res-tan.css">
   <style>
     body{font-family:Arial,Helvetica,sans-serif;margin:20px;color:#222}
     .container{display:grid;grid-template-columns:1fr 380px;gap:20px;align-items:start}
-    header{display:flex;justify-content:space-between;align-items:center}
+    .res-tan-header{display:flex;justify-content:space-between;align-items:center}
+    .logo{display:flex;align-items:center}
+    .logo-mark{font-size:28px;color:#e91e63}
+    .logo-text{display:flex;flex-direction:column;line-height:1.2}
+    .brand{font-weight:bold;font-size:18px;color:#333}
+    .tag{font-size:12px;color:#666}
     #drop{border:2px dashed #999;padding:16px;text-align:center;border-radius:8px;background:#fafafa}
     .controls{padding:12px;border:1px solid #eee;border-radius:8px;background:#fff}
     .file{border:1px solid #ddd;padding:8px;margin:8px;display:flex;gap:8px;align-items:center;border-radius:6px;background:#fff}
@@ -25,9 +31,15 @@
   </style>
 </head>
 <body>
-  <header>
-    <h1>Simple Image Tool</h1>
-    <div class="muted">Open the Save/Outputs panel after processing</div>
+  <header class="res-tan-header">
+    <div class="logo">
+      <div class="logo-mark">れ</div>
+      <div class="logo-text">
+        <div class="brand">Res-tan</div>
+        <div class="tag">cute image toolkit — convert · resize · zip</div>
+      </div>
+    </div>
+    <div class="muted header-hint">Open the Save/Outputs panel after processing</div>
   </header>
 
   <div class="container">
