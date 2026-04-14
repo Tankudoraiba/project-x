@@ -4,6 +4,9 @@ const filesDiv = document.getElementById('files');
 let items = [];
 
 const defaultPreserveCheckbox = document.getElementById('defaultPreserve');
+const defaultWidthInput = document.getElementById('defaultWidth');
+const defaultHeightInput = document.getElementById('defaultHeight');
+const applyDefaultsBtn = document.getElementById('applyDefaults');
 const statusSpan = document.getElementById('status');
 const outputsSidebar = document.getElementById('outputsSidebar');
 
@@ -23,8 +26,8 @@ function render() {
     meta.innerHTML = `
       <strong>${it.name}</strong><br>
       Format: <select data-idx="${idx}" class="format"><option>png</option><option>jpg</option><option>webp</option><option>heic</option></select>
-      Width: <input data-idx="${idx}" class="width" size="4" />
-      Height: <input data-idx="${idx}" class="height" size="4" />
+      Width: <input data-idx="${idx}" class="width" size="4" value="${it.width || ''}" />
+      Height: <input data-idx="${idx}" class="height" size="4" value="${it.height || ''}" />
       Preserve: <input type="checkbox" data-idx="${idx}" class="preserve" ${it.preserve ? 'checked' : ''} />
     `;
 
@@ -52,7 +55,9 @@ function handleFiles(files) {
   const form = new FormData();
   for (const f of files) form.append('files', f, f.name);
   fetch('/api/upload', { method: 'POST', body: form }).then(r=>r.json()).then(list=>{
-    list.forEach(l=>items.push({ name: l.saved, preserve: defaultPreserveCheckbox.checked }));
+    const defaultW = parseInt(defaultWidthInput.value) || null;
+    const defaultH = parseInt(defaultHeightInput.value) || null;
+    list.forEach(l=>items.push({ name: l.saved, preserve: defaultPreserveCheckbox.checked, width: defaultW, height: defaultH }));
     render();
   }).catch(e=>{ console.error(e); statusSpan.textContent = 'Upload failed'; });
 }
@@ -134,4 +139,12 @@ document.getElementById('process').addEventListener('click', async ()=>{
     console.error(e);
     statusSpan.textContent = 'Processing failed';
   }
+});
+
+// apply defaults to existing items
+applyDefaultsBtn.addEventListener('click', ()=>{
+  const defaultW = parseInt(defaultWidthInput.value) || null;
+  const defaultH = parseInt(defaultHeightInput.value) || null;
+  items = items.map(it => ({ ...it, width: defaultW, height: defaultH }));
+  render();
 });

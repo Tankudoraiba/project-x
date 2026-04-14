@@ -11,8 +11,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
   && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
-COPY package.json package-lock.json* ./
-RUN if [ -f package-lock.json ]; then npm ci --omit=dev; else npm install --omit=dev; fi
+COPY package*.json ./
+# prefer npm ci, but fall back to npm install for environments without a lockfile (works with BuildKit/Portainer)
+RUN npm ci --omit=dev || npm install --omit=dev
 COPY . .
 RUN mkdir -p storage storage/originals storage/outputs storage/tmp
 
