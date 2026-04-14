@@ -82,7 +82,26 @@ function handleFiles(files) {
 
 drop.addEventListener('drop', (e)=>{e.preventDefault(); handleFiles(e.dataTransfer.files)});
 drop.addEventListener('dragover', (e)=>{e.preventDefault()});
+
+// visual feedback for drag operations
+drop.addEventListener('dragenter', (e)=>{ e.preventDefault(); drop.classList.add('dragover'); });
+drop.addEventListener('dragleave', (e)=>{ e.preventDefault(); drop.classList.remove('dragover'); });
+// ensure class removed on drop
+drop.addEventListener('drop', (e)=>{ e.preventDefault(); drop.classList.remove('dragover'); handleFiles(e.dataTransfer.files); });
+
 picker.addEventListener('change', (e)=>handleFiles(e.target.files));
+
+// keyboard accessibility for the filepicker label
+try{
+  const filepickerLabel = document.querySelector('.filepicker-label');
+  if (filepickerLabel) {
+    // ensure focusable
+    if (!filepickerLabel.hasAttribute('tabindex')) filepickerLabel.setAttribute('tabindex','0');
+    filepickerLabel.addEventListener('keydown', (ev)=>{
+      if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); picker.click(); }
+    });
+  }
+}catch(e){}
 
 async function createDownloads(outputs) {
   const outputsDiv = document.getElementById('outputs');
