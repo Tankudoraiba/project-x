@@ -14,15 +14,15 @@ h1{margin:0;font-size:20px;padding-left:6px}
 .title-wrap{display:flex;flex-direction:column;gap:6px}
 .container{display:flex;justify-content:center;padding:18px}
 .main-col{max-width:980px;width:100%;}
-#drop{border:2px dashed rgba(100,110,120,0.2);padding:16px;text-align:center;border-radius:12px;background:linear-gradient(180deg,rgba(255,255,255,0.6),rgba(255,255,255,0.4));box-shadow:var(--shadow);display:flex;align-items:center;justify-content:center;gap:8px}
-#drop.dragover{background:linear-gradient(180deg,rgba(255,255,255,0.8),rgba(250,245,255,0.9));border-color:var(--accent2);transform:translateY(-2px)}
-.filepicker-label{display:inline-flex;align-items:center;gap:8px;cursor:pointer;padding:8px 12px;border-radius:10px;background:linear-gradient(90deg,var(--accent),var(--accent2));color:#fff;font-weight:700;border:1px solid rgba(255,255,255,0.06)}
+#drop{border:2px dashed rgba(100,110,120,0.2);padding:20px;min-height:110px;text-align:center;border-radius:12px;background:linear-gradient(180deg,rgba(255,255,255,0.6),rgba(255,255,255,0.4));box-shadow:var(--shadow);display:flex;align-items:center;justify-content:center;gap:8px;transition:box-shadow .12s,transform .08s;cursor:pointer}
+#drop.dragover{background:linear-gradient(180deg,rgba(255,255,255,0.8),rgba(250,245,255,0.9));border-color:var(--accent2);box-shadow:0 20px 40px rgba(123,215,255,0.08);transform:translateY(-4px)}
+.filepicker-label{display:inline-flex;align-items:center;gap:8px;cursor:pointer;padding:8px 12px;border-radius:10px;background:linear-gradient(90deg,var(--accent),var(--accent2));color:#fff;font-weight:700;border:1px solid rgba(255,255,255,0.06);height:36px;display:inline-flex;align-items:center;justify-content:center}
 .filepicker-label input{display:none}
 .controls{padding:14px;border:1px solid rgba(20,30,60,0.04);border-radius:12px;background:var(--card);box-shadow:var(--shadow)}
 .file{border:1px solid rgba(20,30,60,0.06);padding:12px;margin:6px;display:grid;grid-template-columns:96px 1fr 80px;gap:12px;align-items:center;border-radius:10px;background:linear-gradient(180deg,#fff,#fff);
   transition:transform .18s ease,box-shadow .18s ease}
 .file:hover{transform:translateY(-4px);box-shadow:0 18px 40px rgba(15,25,40,0.08)}
-.thumb{width:84px;height:84px;object-fit:cover;border-radius:8px;border:2px solid rgba(0,0,0,0.03)}
+.thumb{width:84px;height:84px;object-fit:cover;border-radius:8px;border:2px solid rgba(0,0,0,0.03);background:#f6f8fa}
 .file-meta{flex:1}
 .file-meta label{display:inline-flex;align-items:center;gap:8px}
 .row-dim{display:flex;gap:12px;align-items:center}
@@ -32,12 +32,13 @@ h1{margin:0;font-size:20px;padding-left:6px}
 .row-format select{min-width:88px}
 .file-actions{display:flex;flex-direction:column;gap:6px;align-items:center;justify-content:center}
 .controls-row{display:flex;gap:8px;align-items:center;justify-content:flex-start;flex-wrap:wrap}
-.file-title{font-size:14px;margin-bottom:6px}
+.file-title{font-size:14px;margin-bottom:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
 #files{display:grid;grid-template-columns:repeat(2,minmax(280px,1fr));gap:12px;align-items:start;margin-top:12px}
-#outputs{margin-top:14px}
+#outputs{margin-top:16px;padding-top:6px}
 .output{padding:10px;border:1px solid rgba(20,30,60,0.06);margin:6px;border-radius:10px;background:var(--card)}
-button{cursor:pointer;border:0;padding:8px 12px;border-radius:10px;background:linear-gradient(90deg,var(--accent),var(--accent2));color:white;font-weight:600}
+button{cursor:pointer;border:0;padding:8px 12px;border-radius:10px;background:linear-gradient(90deg,var(--accent),var(--accent2));color:white;font-weight:600;height:36px;display:inline-flex;align-items:center;justify-content:center}
 button.secondary{background:#eef6fa;color:#0c2940;border:1px solid rgba(12,40,64,0.06)}
+button[disabled]{opacity:0.55;cursor:not-allowed;box-shadow:none;transform:none}
 .muted{color:var(--muted);font-size:13px}
 .small{font-size:13px}
 input[type="text"], input[type="number"], input[type="search"], select{
@@ -187,6 +188,7 @@ select option { background: #fff; color: var(--text); }
 
 /* modern filepicker label as a proper button with focus style */
 .filepicker-label{
-  display:inline-flex;align-items:center;gap:8px;cursor:pointer;padding:8px 12px;border-radius:10px;background:linear-gradient(90deg,var(--accent),var(--accent2));color:#fff;font-weight:700;border:1px solid rgba(255,255,255,0.06);
+  display:inline-flex;align-items:center;gap:8px;cursor:pointer;padding:8px 12px;border-radius:10px;background:linear-gradient(90deg,var(--accent),var(--accent2));color:#fff;font-weight:700;border:1px solid rgba(255,255,255,0.06);height:36px;display:inline-flex;align-items:center;justify-content:center
 }
 .filepicker-label:focus, .filepicker-label:hover{box-shadow:0 10px 30px rgba(123,215,255,0.08);transform:translateY(-1px)}
+.filepicker-label:focus-visible{outline:2px solid rgba(123,215,255,0.18);outline-offset:2px}
