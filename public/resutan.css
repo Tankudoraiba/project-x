@@ -236,12 +236,16 @@ h1 {
 
 /* Unified control styles for inputs, selects, textareas, buttons, and the filepicker label */
 /* Keep native checkboxes/radios excluded so they keep browser defaults */
-input:not([type="checkbox"]):not([type="radio"]),
+input[type="text"],
+input[type="number"],
+input[type="search"],
 textarea,
 select,
 .file-meta input,
 .file-meta select,
-.settings input,
+.settings input[type="text"],
+.settings input[type="number"],
+.settings select,
 .controls-row input,
 button,
 .filepicker-label {
@@ -263,6 +267,31 @@ button,
     appearance: none;
 }
 
+/* Fix: ensure inputs without an explicit type (defaultWidth/defaultHeight) and other generic inputs
+   get the unified control styling; exclude checkboxes, radios and file inputs so they keep native sizing */
+input:not([type="checkbox"]):not([type="radio"]):not([type="file"]),
+textarea,
+select,
+.file-meta input,
+.file-meta select,
+#defaultWidth,
+#defaultHeight {
+  height: var(--control-height);
+  padding: var(--control-padding);
+  border-radius: var(--control-radius);
+  border: var(--control-border);
+  background: var(--control-bg);
+  box-shadow: var(--control-shadow-inset);
+  font-size: 13px;
+  color: var(--text);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+
 /* Primary action visuals kept for buttons and the filepicker label */
 button,
 .filepicker-label {
@@ -272,6 +301,12 @@ button,
     border: none;
     justify-content: center;
     cursor: pointer;
+}
+
+/* Ensure buttons and the filepicker label show a pointer cursor on hover/click */
+button,
+.filepicker-label {
+  cursor: pointer;
 }
 
 /* Keep small/neutral buttons inside file cards subtle */
