@@ -27,7 +27,8 @@ body {
     background: linear-gradient(135deg, var(--bg1), var(--bg2));
     margin: 0;
     color: var(--text);
-    min-height: 100vh
+    min-height: 100vh;
+    min-width: 320px;
 }
 
 header {
@@ -458,28 +459,16 @@ input[type="radio"] {
   cursor: pointer;
 }
 
-/* Ensure numeric inputs keep right alignment */
-.file-meta input.width,
-.file-meta input.height,
-#defaultWidth,
-#defaultHeight {
-    text-align: right;
+/* Ensure label containers align controls centrally */
+.file-meta label, .settings .small, .controls-row label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
 }
 
-/* Empty state */
-#files.empty {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 24px;
-    border-radius: 10px;
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0.4));
-    border: 1px dashed rgba(12, 20, 30, 0.04)
-}
-
-#files.empty .empty-msg {
-    color: var(--muted);
-    font-size: 15px
+/* Small utility to ensure inline inputs don't collapse when empty */
+input::placeholder, textarea::placeholder {
+  color: rgba(12, 20, 30, 0.35);
 }
 
 @media (max-width:900px) {
@@ -544,6 +533,7 @@ textarea,
 #defaultWidth,
 #defaultHeight {
     text-align: right;
+    width: 6ch;
 }
 
 /* Selects with custom caret */
@@ -726,28 +716,16 @@ input[type="radio"] {
   cursor: pointer;
 }
 
-/* Ensure numeric inputs keep right alignment */
-.file-meta input.width,
-.file-meta input.height,
-#defaultWidth,
-#defaultHeight {
-    text-align: right;
+/* Ensure label containers align controls centrally */
+.file-meta label, .settings .small, .controls-row label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
 }
 
-/* Empty state */
-#files.empty {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 24px;
-    border-radius: 10px;
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0.4));
-    border: 1px dashed rgba(12, 20, 30, 0.04)
-}
-
-#files.empty .empty-msg {
-    color: var(--muted);
-    font-size: 15px
+/* Small utility to ensure inline inputs don't collapse when empty */
+input::placeholder, textarea::placeholder {
+  color: rgba(12, 20, 30, 0.35);
 }
 
 @media (max-width:900px) {
@@ -812,6 +790,10 @@ textarea,
 #defaultWidth,
 #defaultHeight {
     text-align: right;
+}
+
+.settings{
+    text-align: center;
 }
 
 /* Selects with custom caret */
@@ -987,14 +969,8 @@ input[type="radio"] {
   cursor: pointer;
 }
 
-/* Ensure label containers align controls centrally */
-.file-meta label, .settings .small, .controls-row label {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-}
-
-/* Small utility to ensure inline inputs don't collapse when empty */
-input::placeholder, textarea::placeholder {
-  color: rgba(12, 20, 30, 0.35);
+/* Ensure the app container has a minimum size */
+body {
+    min-width: 650px;
+    min-height: 480px;
 }
