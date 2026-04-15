@@ -572,6 +572,34 @@ select:hover {
     transform: translateY(-1px);
 }
 
+/* Buttons: ensure active state returns to default (no persistent lift) */
+button:active,
+button:active:focus,
+.filepicker-label:active,
+.filepicker-label:active:focus {
+  transform: translateY(0) !important;
+  box-shadow: none !important;
+}
+
+/* Restore neutral secondary button visuals and ensure it isn't overridden by generic button rules */
+button.secondary {
+  background: #eef6fa !important;
+  color: #0c2940 !important;
+  border: 1px solid rgba(12, 40, 64, 0.06) !important;
+  box-shadow: none !important;
+  transform: none !important;
+}
+
+button.secondary:hover {
+  box-shadow: 0 6px 18px rgba(123, 215, 255, 0.04);
+  transform: translateY(-1px);
+}
+
+button.secondary:active {
+  transform: translateY(0) !important;
+  box-shadow: none !important;
+}
+
 /* remove inner focus ring in Firefox — normalize focus to accent */
 select:-moz-focusring {
     outline: none;
