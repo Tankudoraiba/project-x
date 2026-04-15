@@ -183,7 +183,7 @@ h1 {
 
 .row-dim .width,
 .row-dim .height {
-    width: 8ch
+    width: 10ch
 }
 
 .row-format {
@@ -247,7 +247,10 @@ h1 {
 
 .file-title {
     font-size: 14px;
-    margin-bottom: 6px
+    margin-bottom: 6px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 #files {
