@@ -355,7 +355,7 @@ button:focus,
     outline: none;
     border-color: var(--accent2);
     box-shadow: var(--control-focus);
-    transform: translateY(-1px);
+    
 }
 
 button:hover,
@@ -364,7 +364,7 @@ input[type="text"]:hover,
 select:hover {
     border-color: rgba(123, 215, 255, 0.6);
     box-shadow: 0 6px 18px rgba(123, 215, 255, 0.04);
-    transform: translateY(-1px);
+    
 }
 
 /* Button/controls press & focus fixes
@@ -410,7 +410,7 @@ button.secondary {
 
 /* Fine tune hover for secondary to match primary motion */
 button.secondary:hover {
-  transform: translateY(-1px);
+  
   box-shadow: 0 6px 18px rgba(123, 215, 255, 0.04);
 }
 
@@ -442,7 +442,7 @@ textarea:focus-visible {
     outline: none !important;
     border-color: var(--accent2) !important;
     box-shadow: var(--control-focus) !important;
-    transform: translateY(-1px);
+    
 }
 
 /* Keep native checkboxes/radios small and unaffected by unified height */
@@ -623,7 +623,7 @@ button:focus,
     outline: none;
     border-color: var(--accent2);
     box-shadow: var(--control-focus);
-    transform: translateY(-1px);
+    
 }
 
 button:hover,
@@ -632,7 +632,7 @@ input[type="text"]:hover,
 select:hover {
     border-color: rgba(123, 215, 255, 0.6);
     box-shadow: 0 6px 18px rgba(123, 215, 255, 0.04);
-    transform: translateY(-1px);
+    
 }
 
 /* Button/controls press & focus fixes
@@ -678,7 +678,7 @@ button.secondary {
 
 /* Fine tune hover for secondary to match primary motion */
 button.secondary:hover {
-  transform: translateY(-1px);
+  
   box-shadow: 0 6px 18px rgba(123, 215, 255, 0.04);
 }
 
@@ -710,7 +710,7 @@ textarea:focus-visible {
     outline: none !important;
     border-color: var(--accent2) !important;
     box-shadow: var(--control-focus) !important;
-    transform: translateY(-1px);
+    
 }
 
 /* Keep native checkboxes/radios small and unaffected by unified height */
@@ -891,7 +891,7 @@ button:focus,
     outline: none;
     border-color: var(--accent2);
     box-shadow: var(--control-focus);
-    transform: translateY(-1px);
+    
 }
 
 button:hover,
@@ -900,7 +900,7 @@ input[type="text"]:hover,
 select:hover {
     border-color: rgba(123, 215, 255, 0.6);
     box-shadow: 0 6px 18px rgba(123, 215, 255, 0.04);
-    transform: translateY(-1px);
+    
 }
 
 /* Button/controls press & focus fixes
@@ -946,7 +946,7 @@ button.secondary {
 
 /* Fine tune hover for secondary to match primary motion */
 button.secondary:hover {
-  transform: translateY(-1px);
+  
   box-shadow: 0 6px 18px rgba(123, 215, 255, 0.04);
 }
 
@@ -971,7 +971,7 @@ textarea:focus-visible {
     outline: none !important;
     border-color: var(--accent2) !important;
     box-shadow: var(--control-focus) !important;
-    transform: translateY(-1px);
+    
 }
 
 /* Keep native checkboxes/radios small and unaffected by unified height */
