@@ -156,6 +156,29 @@ app.get('/api/download/output/:file', (req, res) => {
   res.sendFile(p);
 });
 
+app.get('/api/download/all', (req, res) => {
+  const sessionOutputs = req.sessionOutputs;
+  if (!fs.existsSync(sessionOutputs)) return res.status(404).send('not found');
+  const files = fs.readdirSync(sessionOutputs).filter(f => fs.statSync(path.join(sessionOutputs, f)).isFile());
+  if (files.length === 0) return res.status(404).send('not found');
+
+  res.setHeader('Content-Type', 'application/zip');
+  res.setHeader('Content-Disposition', 'attachment; filename="resutan-outputs.zip"');
+
+  const archive = archiver('zip', { zlib: { level: 9 } });
+  archive.on('error', err => {
+    console.error('zip error', err);
+    if (!res.headersSent) res.status(500).send('Archive creation failed');
+  });
+  archive.pipe(res);
+
+  files.forEach(file => {
+    archive.file(path.join(sessionOutputs, file), { name: file });
+  });
+
+  archive.finalize();
+});
+
 // Cleanup job: remove session folders older than TTL
 const SESSION_TTL_MS = (parseInt(process.env.SESSION_TTL_SECONDS) || 1800) * 1000; // default 30min
 setInterval(() => {

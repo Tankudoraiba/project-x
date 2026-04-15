@@ -120,16 +120,13 @@ async function createDownloads(outputs) {
   // Download All button action
   const downloadAll = document.getElementById('downloadAll');
   downloadAll.onclick = async ()=>{
-    for (const fname of outputs) {
       const a = document.createElement('a');
-      a.href = '/api/download/output/' + encodeURIComponent(fname);
-      a.download = fname;
+      a.href = '/api/download/all';
+      a.download = 'resutan-outputs.zip';
       document.body.appendChild(a);
       a.click();
       a.remove();
-      await new Promise(r=>setTimeout(r, 200));
-    }
-  };
+     };
 }
 
 // updated process handler
