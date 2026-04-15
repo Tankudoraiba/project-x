@@ -136,11 +136,12 @@ h1 {
     border: 1px solid rgba(20, 30, 60, 0.06);
     padding: 16px;
     margin: 6px;
+    position: relative;
     display: grid;
     grid-template-columns: 96px minmax(220px, 1fr) 120px;
     grid-template-areas: "thumb meta actions";
     gap: 16px;
-    align-items: start;
+    align-items: stretch;
     border-radius: 10px;
     background: linear-gradient(180deg, #fff, #fff);
     transition: transform .18s ease, box-shadow .18s ease
@@ -206,7 +207,11 @@ h1 {
     justify-content: flex-start;
     width: 100%;
     max-width: 160px;
-    align-self: start;
+    align-self: end;
+    justify-self: end;
+    position: absolute;
+    bottom: 16px;
+    right: 16px;
 }
 
 .file-actions button {
@@ -576,18 +581,17 @@ input::placeholder, textarea::placeholder {
     }
 
     .file {
+        position: static;
         grid-template-columns: 72px 1fr;
         grid-template-rows: auto auto auto;
         grid-template-areas: "thumb meta" "thumb meta" "actions actions";
     }
 
     .file-actions {
-        flex-direction: row;
-        flex-wrap: wrap;
-        gap: 8px;
-        justify-content: flex-start;
+        position: static;
         max-width: none;
         margin-top: 10px;
+        justify-content: flex-start;
     }
 
     .file-actions button {
