@@ -200,16 +200,21 @@ h1 {
 .file-actions {
     grid-area: actions;
     display: flex;
-    justify-content: flex-end;
+    justify-content: space-between;
     align-items: center;
     gap: 10px;
     flex-wrap: wrap;
 }
 
 .file-actions button {
-    min-width: 100px;
+    flex: 1 1 calc(50% - 5px);
+    min-width: 0;
     padding: 10px 12px;
     min-height: 42px;
+}
+
+.file-actions button:only-child {
+    flex: 1 1 100%;
 }
 
 .controls-row {
@@ -584,7 +589,7 @@ input::placeholder, textarea::placeholder {
 
     .file-actions button {
         flex: 1 1 calc(50% - 10px);
-        min-width: 120px;
+        min-width: 0;
     }
 }
 
