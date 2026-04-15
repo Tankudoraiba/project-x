@@ -137,7 +137,7 @@ h1 {
     padding: 16px;
     margin: 6px;
     display: grid;
-    grid-template-columns: 96px minmax(260px, 1fr) 120px;
+    grid-template-columns: 96px minmax(220px, 1fr) 140px;
     gap: 16px;
     align-items: start;
     border-radius: 10px;
@@ -198,22 +198,20 @@ h1 {
 
 .file-actions {
     display: flex;
-    flex-direction: column;
-    gap: 10px;
-    align-items: stretch;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
     justify-content: flex-start;
-    max-width: 120px;
     width: 100%;
+    max-width: 160px;
 }
 
 .file-actions button {
-    width: 100%;
-    box-sizing: border-box;
-    max-width: 100%;
-    padding: 10px 12px;
-    min-height: 44px;
-    text-align: center;
-    min-width: 0;
+    flex: 0 1 auto;
+    min-width: 90px;
+    padding: 8px 10px;
+    font-size: 13px;
 }
 
 .controls-row {
@@ -580,15 +578,13 @@ input::placeholder, textarea::placeholder {
 
     .file-actions {
         grid-column: 1 / -1;
-        flex-direction: row;
-        flex-wrap: wrap;
-        gap: 8px;
+        justify-content: flex-start;
         max-width: none;
     }
 
     .file-actions button {
         flex: 1 1 calc(50% - 8px);
-        min-width: 0;
+        min-width: 110px;
     }
 }
 
