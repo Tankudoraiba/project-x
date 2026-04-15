@@ -20,6 +20,10 @@ const cookieParser = require('cookie-parser');
 const crypto = require('crypto');
 app.use(cookieParser());
 
+function randomSuffix(length = 4) {
+  return crypto.randomBytes(length).toString('hex');
+}
+
 app.use((req, res, next) => {
   // ensure a session id exists in cookie
   try {
@@ -103,7 +107,7 @@ app.post('/api/process', async (req, res) => {
         const image = sharp(src, { pages: -1 });
         const metadata = await image.metadata();
         const frames = metadata.pages || 1;
-        const zipName = `${outNameBase}-frames.zip`;
+        const zipName = `${outNameBase}-${randomSuffix(4)}-frames.zip`;
         const zipPath = path.join(req.sessionOutputs, zipName);
         const output = fs.createWriteStream(zipPath);
         const archive = archiver('zip');
@@ -113,29 +117,30 @@ app.post('/api/process', async (req, res) => {
           archive.append(buf, { name: `${outNameBase}-frame-${i}.png` });
         }
         await archive.finalize();
-        outFiles.push(zipName);
+        outFiles.push({ input: t.name, output: zipName });
       } catch (e) {
         console.error('frames error', e);
       }
       continue;
     }
 
-    let pipeline = sharp(src, { animated: true });
-    if (t.width || t.height) {
-      const preserve = typeof t.preserve === 'boolean' ? t.preserve : true;
-      const fit = preserve ? 'inside' : 'fill';
-      pipeline = pipeline.resize(t.width || null, t.height || null, { fit });
-    }
-
-    const outName = `${outNameBase}.${ext}`;
+    const rand = randomSuffix(4);
+    const outName = `${outNameBase}-${rand}.${ext}`;
     const outPath = path.join(req.sessionOutputs, outName);
     try {
+      let pipeline = sharp(src, { animated: true });
+      if (t.width || t.height) {
+        const preserve = typeof t.preserve === 'boolean' ? t.preserve : true;
+        const fit = preserve ? 'inside' : 'fill';
+        pipeline = pipeline.resize(t.width || null, t.height || null, { fit });
+      }
+
       if (ext === 'jpg' || ext === 'jpeg') await pipeline.jpeg().toFile(outPath);
       else if (ext === 'png') await pipeline.png().toFile(outPath);
       else if (ext === 'webp') await pipeline.webp().toFile(outPath);
       else if (ext === 'heic') await pipeline.toFile(outPath);
       else await pipeline.toFile(outPath);
-      outFiles.push(outName);
+      outFiles.push({ input: t.name, output: outName });
     } catch (e) {
       console.error('process error', e);
     }

@@ -54,6 +54,22 @@ function render() {
     removeBtn.onclick = () => { items.splice(idx, 1); render(); try { picker.value = ''; } catch(e){} };
     actions.appendChild(removeBtn);
 
+    if (it.output) {
+      const downloadBtn = document.createElement('button');
+      downloadBtn.textContent = 'Download Processed';
+      downloadBtn.style.marginTop = '8px';
+      downloadBtn.onclick = (e) => {
+        e.preventDefault();
+        const a = document.createElement('a');
+        a.href = '/api/download/output/' + encodeURIComponent(it.output) + '?_=' + Date.now();
+        a.download = it.output;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+      };
+      actions.appendChild(downloadBtn);
+    }
+
     div.appendChild(img);
     div.appendChild(meta);
     div.appendChild(actions);
@@ -88,50 +104,13 @@ drop.addEventListener('dragover', (e)=>{e.preventDefault()});
 picker.addEventListener('change', (e)=>handleFiles(e.target.files));
 
 async function createDownloads(outputs) {
-  const outputsDiv = document.getElementById('outputs');
-  outputsDiv.innerHTML = '<h3>Processed outputs</h3>';
-
-  function cacheBustedUrl(url) {
-    return `${url}?_=${Date.now()}`;
-  }
-
-  outputs.forEach((fname, i) => {
-    const div = document.createElement('div');
-    div.className = 'output';
-
-    const btn = document.createElement('button');
-    btn.textContent = 'Download';
-    btn.addEventListener('click', (e)=>{
-      e.preventDefault();
-      const a = document.createElement('a');
-      a.href = cacheBustedUrl('/api/download/output/' + encodeURIComponent(fname));
-      a.download = fname;
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-    });
-
-    const link = document.createElement('a');
-    link.href = cacheBustedUrl('/api/download/output/' + encodeURIComponent(fname));
-    link.textContent = fname;
-    link.target = '_blank';
-
-    div.appendChild(btn);
-    div.appendChild(document.createTextNode(' '));
-    div.appendChild(link);
-    outputsDiv.appendChild(div);
+  outputs.forEach(({ input, output }) => {
+    const idx = items.findIndex(it => it.name === input);
+    if (idx !== -1) {
+      items[idx].output = output;
+    }
   });
-
-  // Download All button action
-  const downloadAll = document.getElementById('downloadAll');
-  downloadAll.onclick = async ()=>{
-      const a = document.createElement('a');
-      a.href = cacheBustedUrl('/api/download/all');
-      a.download = 'resutan-outputs.zip';
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-     };
+  render();
 }
 
 // updated process handler
