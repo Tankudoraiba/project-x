@@ -359,6 +359,29 @@ select:hover {
     transform: translateY(-1px);
 }
 
+/* remove inner focus ring in Firefox — normalize focus to accent */
+select:-moz-focusring {
+    outline: none;
+    border-color: var(--accent2);
+    box-shadow: var(--control-focus);
+}
+
+/* Ensure keyboard/visible focus uses accent for inputs and selects (override browser defaults) */
+:focus-visible {
+    outline: none !important;
+}
+
+select:focus-visible,
+.file-meta select:focus-visible,
+.settings select:focus-visible,
+input:focus-visible,
+textarea:focus-visible {
+    outline: none !important;
+    border-color: var(--accent2) !important;
+    box-shadow: var(--control-focus) !important;
+    transform: translateY(-1px);
+}
+
 /* Keep native checkboxes/radios small and unaffected by unified height */
 input[type="checkbox"],
 input[type="radio"] {
@@ -444,10 +467,7 @@ textarea,
     border-radius: var(--control-radius);
     border: var(--control-border);
     background: var(--control-bg);
-    outline: none;
-    border-color: var(--accent2);
-    box-shadow: var(--control-focus);
-    transform: translateY(-1px);
+    box-shadow: var(--control-shadow-inset);
     font-size: 13px;
     color: var(--text);
     transition: box-shadow .12s, border-color .12s, transform .06s, background .06s;
@@ -549,6 +569,29 @@ input[type="text"]:hover,
 select:hover {
     border-color: rgba(123, 215, 255, 0.6);
     box-shadow: 0 6px 18px rgba(123, 215, 255, 0.04);
+    transform: translateY(-1px);
+}
+
+/* remove inner focus ring in Firefox — normalize focus to accent */
+select:-moz-focusring {
+    outline: none;
+    border-color: var(--accent2);
+    box-shadow: var(--control-focus);
+}
+
+/* Ensure keyboard/visible focus uses accent for inputs and selects (override browser defaults) */
+:focus-visible {
+    outline: none !important;
+}
+
+select:focus-visible,
+.file-meta select:focus-visible,
+.settings select:focus-visible,
+input:focus-visible,
+textarea:focus-visible {
+    outline: none !important;
+    border-color: var(--accent2) !important;
+    box-shadow: var(--control-focus) !important;
     transform: translateY(-1px);
 }
 
