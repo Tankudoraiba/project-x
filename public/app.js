@@ -40,8 +40,6 @@ function render() {
        <div class="controls-row row-dim">
          <label>Width: <input data-idx="${idx}" class="width" size="6" placeholder="px" value="${it.width || ''}" /></label>
          <label>Height: <input data-idx="${idx}" class="height" size="6" placeholder="px" value="${it.height || ''}" /></label>
-       </div>
-       <div class="controls-row row-format">
         ${createCustomFormatSelect(idx, it.format)}
          <label style="display:flex;align-items:center;gap:6px">Preserve: <input type="checkbox" data-idx="${idx}" class="preserve" ${it.preserve ? 'checked' : ''} /></label>
        </div>
