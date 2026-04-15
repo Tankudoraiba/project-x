@@ -198,13 +198,13 @@ h1 {
 
 .file-actions {
     display: flex;
-    flex-direction: row;
     flex-wrap: wrap;
     gap: 8px;
     align-items: center;
     justify-content: flex-start;
     width: 100%;
-    max-width: 160px;
+    max-width: 180px;
+    align-self: start;
 }
 
 .file-actions button {
@@ -212,6 +212,7 @@ h1 {
     min-width: 90px;
     padding: 8px 10px;
     font-size: 13px;
+    white-space: nowrap;
 }
 
 .controls-row {
@@ -573,10 +574,11 @@ input::placeholder, textarea::placeholder {
 
     .file {
         grid-template-columns: 72px 1fr;
-        grid-template-rows: auto auto;
+        grid-template-rows: auto auto auto;
     }
 
     .file-actions {
+        margin-top: 8px;
         grid-column: 1 / -1;
         justify-content: flex-start;
         max-width: none;
