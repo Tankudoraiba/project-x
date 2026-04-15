@@ -139,6 +139,10 @@ h1 {
     display: grid;
     grid-template-columns: 96px minmax(240px, 1fr);
     grid-template-rows: auto 1fr auto;
+    grid-template-areas:
+      "thumb meta"
+      "thumb meta"
+      "actions actions";
     gap: 12px;
     align-items: start;
     border-radius: 10px;
@@ -157,16 +161,14 @@ h1 {
     object-fit: cover;
     border-radius: 8px;
     border: 2px solid rgba(0, 0, 0, 0.03);
-    grid-row: 1 / span 2;
-    grid-column: 1;
-    align-self: start;
+    grid-area: thumb;
 }
 
 .file-meta {
     display: flex;
     flex-direction: column;
     gap: 12px;
-    grid-column: 2;
+    grid-area: meta;
 }
 
 .row-dim {
@@ -196,7 +198,7 @@ h1 {
 }
 
 .file-actions {
-    grid-column: 1 / -1;
+    grid-area: actions;
     display: flex;
     justify-content: flex-end;
     align-items: center;
@@ -570,6 +572,10 @@ input::placeholder, textarea::placeholder {
     .file {
         grid-template-columns: 72px 1fr;
         grid-template-rows: auto auto auto;
+        grid-template-areas:
+          "thumb meta"
+          "thumb meta"
+          "actions actions";
     }
 
     .file-actions {
