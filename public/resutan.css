@@ -199,16 +199,21 @@ h1 {
 .file-actions {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 10px;
     align-items: stretch;
     justify-content: flex-start;
+    max-width: 120px;
+    width: 100%;
 }
 
 .file-actions button {
     width: 100%;
+    box-sizing: border-box;
+    max-width: 100%;
     padding: 10px 12px;
     min-height: 44px;
     text-align: center;
+    min-width: 0;
 }
 
 .controls-row {
@@ -569,11 +574,21 @@ input::placeholder, textarea::placeholder {
     }
 
     .file {
-        grid-template-columns: 72px 1fr 64px
+        grid-template-columns: 72px 1fr;
+        grid-template-rows: auto auto;
     }
 
-    .file-title {
-        font-size: 13px
+    .file-actions {
+        grid-column: 1 / -1;
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 8px;
+        max-width: none;
+    }
+
+    .file-actions button {
+        flex: 1 1 calc(50% - 8px);
+        min-width: 0;
     }
 }
 
