@@ -147,12 +147,18 @@ app.post('/api/process', async (req, res) => {
 app.get('/api/download/original/:file', (req, res) => {
   const p = path.join(req.sessionOriginals, req.params.file);
   if (!fs.existsSync(p)) return res.status(404).send('not found');
+  res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+  res.setHeader('Pragma', 'no-cache');
+  res.setHeader('Expires', '0');
   res.sendFile(p);
 });
 
 app.get('/api/download/output/:file', (req, res) => {
   const p = path.join(req.sessionOutputs, req.params.file);
   if (!fs.existsSync(p)) return res.status(404).send('not found');
+  res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+  res.setHeader('Pragma', 'no-cache');
+  res.setHeader('Expires', '0');
   res.sendFile(p);
 });
 
@@ -162,6 +168,9 @@ app.get('/api/download/all', (req, res) => {
   const files = fs.readdirSync(sessionOutputs).filter(f => fs.statSync(path.join(sessionOutputs, f)).isFile());
   if (files.length === 0) return res.status(404).send('not found');
 
+  res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+  res.setHeader('Pragma', 'no-cache');
+  res.setHeader('Expires', '0');
   res.setHeader('Content-Type', 'application/zip');
   res.setHeader('Content-Disposition', 'attachment; filename="resutan-outputs.zip"');
 

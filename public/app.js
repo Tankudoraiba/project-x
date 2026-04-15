@@ -90,6 +90,11 @@ picker.addEventListener('change', (e)=>handleFiles(e.target.files));
 async function createDownloads(outputs) {
   const outputsDiv = document.getElementById('outputs');
   outputsDiv.innerHTML = '<h3>Processed outputs</h3>';
+
+  function cacheBustedUrl(url) {
+    return `${url}?_=${Date.now()}`;
+  }
+
   outputs.forEach((fname, i) => {
     const div = document.createElement('div');
     div.className = 'output';
@@ -99,7 +104,7 @@ async function createDownloads(outputs) {
     btn.addEventListener('click', (e)=>{
       e.preventDefault();
       const a = document.createElement('a');
-      a.href = '/api/download/output/' + encodeURIComponent(fname);
+      a.href = cacheBustedUrl('/api/download/output/' + encodeURIComponent(fname));
       a.download = fname;
       document.body.appendChild(a);
       a.click();
@@ -107,7 +112,7 @@ async function createDownloads(outputs) {
     });
 
     const link = document.createElement('a');
-    link.href = '/api/download/output/' + encodeURIComponent(fname);
+    link.href = cacheBustedUrl('/api/download/output/' + encodeURIComponent(fname));
     link.textContent = fname;
     link.target = '_blank';
 
@@ -121,7 +126,7 @@ async function createDownloads(outputs) {
   const downloadAll = document.getElementById('downloadAll');
   downloadAll.onclick = async ()=>{
       const a = document.createElement('a');
-      a.href = '/api/download/all';
+      a.href = cacheBustedUrl('/api/download/all');
       a.download = 'resutan-outputs.zip';
       document.body.appendChild(a);
       a.click();
