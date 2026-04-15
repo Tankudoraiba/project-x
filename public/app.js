@@ -51,15 +51,12 @@ function render() {
     actions.className = 'file-actions';
     const removeBtn = document.createElement('button');
     removeBtn.textContent = 'Remove';
-    removeBtn.style.width = '100%';
     removeBtn.onclick = () => { items.splice(idx, 1); render(); try { picker.value = ''; } catch(e){} };
     actions.appendChild(removeBtn);
 
     if (it.output) {
       const downloadBtn = document.createElement('button');
-      downloadBtn.textContent = 'Downaload';
-      downloadBtn.style.marginTop = '8px';
-      downloadBtn.style.width = '100%';
+      downloadBtn.textContent = 'Download';
       downloadBtn.onclick = (e) => {
         e.preventDefault();
         const a = document.createElement('a');
