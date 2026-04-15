@@ -245,9 +245,17 @@ button {
 }
 
 button.secondary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: var(--control-height);
+    padding: var(--control-padding);
+    border-radius: var(--control-radius);
     background: #eef6fa;
     color: #0c2940;
-    border: 1px solid rgba(12, 40, 64, 0.06)
+    border: 1px solid rgba(12, 40, 64, 0.06);
+    font-weight: 700;
+    gap: 8px;
 }
 
 .muted {
@@ -357,6 +365,61 @@ select:hover {
     border-color: rgba(123, 215, 255, 0.6);
     box-shadow: 0 6px 18px rgba(123, 215, 255, 0.04);
     transform: translateY(-1px);
+}
+
+/* Button/controls press & focus fixes
+   - Prevent focus from keeping controls visually lifted (only hover lifts)
+   - Provide a press (active) state that visually depresses controls and returns on mouseup
+   - Ensure .secondary buttons share sizing/spacing with primary buttons
+*/
+
+/* Ensure focus uses accent but does not translate (so it won't stay lifted after click) */
+button:focus, .filepicker-label:focus, input:focus, textarea:focus, select:focus {
+  transform: none !important;
+}
+
+/* Pressed state: briefly depress controls on active/click */
+button:active,
+.filepicker-label:active,
+select:active,
+input:active,
+textarea:active {
+  transform: translateY(1px) !important; /* slightly push down while active */
+  box-shadow: 0 6px 14px rgba(12, 40, 64, 0.04) !important;
+}
+
+/* Primary button visual when active: subtle inset feel */
+button:active {
+  box-shadow: inset 0 2px 6px rgba(0,0,0,0.04);
+}
+
+/* Make secondary buttons match primary sizing/spacing so Download All aligns */
+button.secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: var(--control-height);
+  padding: var(--control-padding);
+  border-radius: var(--control-radius);
+  background: #eef6fa;
+  color: #0c2940;
+  border: 1px solid rgba(12, 40, 64, 0.06);
+  font-weight: 700;
+  gap: 8px;
+}
+
+/* Fine tune hover for secondary to match primary motion */
+button.secondary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(123, 215, 255, 0.04);
+}
+
+/* Ensure focus-visible still shows accent box-shadow without moving */
+button.secondary:focus-visible {
+  outline: none !important;
+  border-color: var(--accent2) !important;
+  box-shadow: var(--control-focus) !important;
+  transform: none !important;
 }
 
 /* remove inner focus ring in Firefox — normalize focus to accent */
@@ -572,32 +635,59 @@ select:hover {
     transform: translateY(-1px);
 }
 
-/* Buttons: ensure active state returns to default (no persistent lift) */
-button:active,
-button:active:focus,
-.filepicker-label:active,
-.filepicker-label:active:focus {
-  transform: translateY(0) !important;
-  box-shadow: none !important;
-}
+/* Button/controls press & focus fixes
+   - Prevent focus from keeping controls visually lifted (only hover lifts)
+   - Provide a press (active) state that visually depresses controls and returns on mouseup
+   - Ensure .secondary buttons share sizing/spacing with primary buttons
+*/
 
-/* Restore neutral secondary button visuals and ensure it isn't overridden by generic button rules */
-button.secondary {
-  background: #eef6fa !important;
-  color: #0c2940 !important;
-  border: 1px solid rgba(12, 40, 64, 0.06) !important;
-  box-shadow: none !important;
+/* Ensure focus uses accent but does not translate (so it won't stay lifted after click) */
+button:focus, .filepicker-label:focus, input:focus, textarea:focus, select:focus {
   transform: none !important;
 }
 
-button.secondary:hover {
-  box-shadow: 0 6px 18px rgba(123, 215, 255, 0.04);
-  transform: translateY(-1px);
+/* Pressed state: briefly depress controls on active/click */
+button:active,
+.filepicker-label:active,
+select:active,
+input:active,
+textarea:active {
+  transform: translateY(1px) !important; /* slightly push down while active */
+  box-shadow: 0 6px 14px rgba(12, 40, 64, 0.04) !important;
 }
 
-button.secondary:active {
-  transform: translateY(0) !important;
-  box-shadow: none !important;
+/* Primary button visual when active: subtle inset feel */
+button:active {
+  box-shadow: inset 0 2px 6px rgba(0,0,0,0.04);
+}
+
+/* Make secondary buttons match primary sizing/spacing so Download All aligns */
+button.secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: var(--control-height);
+  padding: var(--control-padding);
+  border-radius: var(--control-radius);
+  background: #eef6fa;
+  color: #0c2940;
+  border: 1px solid rgba(12, 40, 64, 0.06);
+  font-weight: 700;
+  gap: 8px;
+}
+
+/* Fine tune hover for secondary to match primary motion */
+button.secondary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(123, 215, 255, 0.04);
+}
+
+/* Ensure focus-visible still shows accent box-shadow without moving */
+button.secondary:focus-visible {
+  outline: none !important;
+  border-color: var(--accent2) !important;
+  box-shadow: var(--control-focus) !important;
+  transform: none !important;
 }
 
 /* remove inner focus ring in Firefox — normalize focus to accent */
@@ -623,17 +713,278 @@ textarea:focus-visible {
     transform: translateY(-1px);
 }
 
-/* Keep native checkboxes/radios small and unaffected by uniform control height */
+/* Keep native checkboxes/radios small and unaffected by unified height */
 input[type="checkbox"],
 input[type="radio"] {
-    height: auto;
-    width: auto;
-    padding: 0;
-    margin: 0 8px 0 0;
+  height: auto;
+  width: auto;
+  padding: 0;
+  margin: 0 8px 0 0;
+  vertical-align: middle;
+  transform: none;
+  box-shadow: none;
+  cursor: pointer;
+}
+
+/* Ensure numeric inputs keep right alignment */
+.file-meta input.width,
+.file-meta input.height,
+#defaultWidth,
+#defaultHeight {
+    text-align: right;
+}
+
+/* Empty state */
+#files.empty {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    border-radius: 10px;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0.4));
+    border: 1px dashed rgba(12, 20, 30, 0.04)
+}
+
+#files.empty .empty-msg {
+    color: var(--muted);
+    font-size: 15px
+}
+
+@media (max-width:900px) {
+    .container {
+        padding: 10px
+    }
+
+    #files {
+        grid-template-columns: 1fr
+    }
+
+    .thumb {
+        width: 64px;
+        height: 64px
+    }
+
+    .logo {
+        width: 48px;
+        height: 48px;
+        font-size: 18px
+    }
+
+    .file {
+        grid-template-columns: 72px 1fr 64px
+    }
+
+    .file-title {
+        font-size: 13px
+    }
+}
+
+/* Unified controls override: normalize inputs, selects, textareas and buttons
+   This block intentionally comes last so it can override earlier duplicated/conflicting rules
+*/
+
+/* Base text controls (preserve caret behavior by using inline-block) */
+input[type="text"],
+input[type="number"],
+input[type="search"],
+textarea,
+.file-meta input,
+.controls-row input,
+#defaultWidth,
+#defaultHeight {
+    display: inline-block;
+    height: var(--control-height);
+    padding: var(--control-padding);
+    border-radius: var(--control-radius);
+    border: var(--control-border);
+    background: var(--control-bg);
+    box-shadow: var(--control-shadow-inset);
+    font-size: 13px;
+    color: var(--text);
+    transition: box-shadow .12s, border-color .12s, transform .06s, background .06s;
     vertical-align: middle;
-    transform: none;
+    box-sizing: border-box;
+}
+
+/* Numeric inputs align right for readability */
+.file-meta input.width,
+.file-meta input.height,
+#defaultWidth,
+#defaultHeight {
+    text-align: right;
+}
+
+/* Selects with custom caret */
+select,
+.file-meta select,
+.settings select {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    display: inline-block;
+    padding: 8px 40px 8px 10px; /* room for caret */
+    height: var(--control-height);
+    line-height: 20px;
+    border-radius: var(--control-radius);
+    border: var(--control-border);
+    background-color: #fff;
+    background-image: linear-gradient(45deg, transparent 50%, rgba(12, 20, 30, 0.6) 50%), linear-gradient(135deg, rgba(12, 20, 30, 0.6) 50%, transparent 50%);
+    background-position: calc(100% - 12px) center;
+    background-repeat: no-repeat;
+    background-size: 6px 6px, 6px 6px;
+    color: var(--text);
+    font-size: 13px;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6);
+    transition: box-shadow .12s, border-color .12s, transform .06s;
+    cursor: pointer;
+}
+
+/* Keep smaller selects inside rows consistent */
+.row-format select,
+.row-format .format {
+    min-width: 92px;
+    padding-right: 40px;
+    height: var(--control-height);
+}
+
+/* Primary action visuals (kept prominent) */
+button,
+.filepicker-label {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: var(--control-height);
+    padding: var(--control-padding);
+    border-radius: var(--control-radius);
+    border: none;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    color: #fff;
+    font-weight: 700;
+    gap: 8px;
+    cursor: pointer;
+    transition: box-shadow .12s, transform .06s, opacity .06s;
+}
+
+/* Subtle card action buttons stay subtle and smaller */
+.file-actions button {
+    background: linear-gradient(180deg, #fff, #f7f9fb);
+    color: var(--text);
+    border: 1px solid rgba(12, 20, 30, 0.06);
+    padding: 6px 10px;
+    height: auto;
     box-shadow: none;
     cursor: pointer;
+    font-weight: 600;
+    border-radius: 10px;
+}
+
+/* Focus & hover states shared across controls */
+input[type="text"]:focus,
+input[type="number"]:focus,
+input[type="search"]:focus,
+textarea:focus,
+select:focus,
+button:focus,
+.filepicker-label:focus,
+.file-meta input:focus,
+.file-meta select:focus {
+    outline: none;
+    border-color: var(--accent2);
+    box-shadow: var(--control-focus);
+    transform: translateY(-1px);
+}
+
+button:hover,
+.filepicker-label:hover,
+input[type="text"]:hover,
+select:hover {
+    border-color: rgba(123, 215, 255, 0.6);
+    box-shadow: 0 6px 18px rgba(123, 215, 255, 0.04);
+    transform: translateY(-1px);
+}
+
+/* Button/controls press & focus fixes
+   - Prevent focus from keeping controls visually lifted (only hover lifts)
+   - Provide a press (active) state that visually depresses controls and returns on mouseup
+   - Ensure .secondary buttons share sizing/spacing with primary buttons
+*/
+
+/* Ensure focus uses accent but does not translate (so it won't stay lifted after click) */
+button:focus, .filepicker-label:focus, input:focus, textarea:focus, select:focus {
+  transform: none !important;
+}
+
+/* Pressed state: briefly depress controls on active/click */
+button:active,
+.filepicker-label:active,
+select:active,
+input:active,
+textarea:active {
+  transform: translateY(1px) !important; /* slightly push down while active */
+  box-shadow: 0 6px 14px rgba(12, 40, 64, 0.04) !important;
+}
+
+/* Primary button visual when active: subtle inset feel */
+button:active {
+  box-shadow: inset 0 2px 6px rgba(0,0,0,0.04);
+}
+
+/* Make secondary buttons match primary sizing/spacing so Download All aligns */
+button.secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: var(--control-height);
+  padding: var(--control-padding);
+  border-radius: var(--control-radius);
+  background: #eef6fa;
+  color: #0c2940;
+  border: 1px solid rgba(12, 40, 64, 0.06);
+  font-weight: 700;
+  gap: 8px;
+}
+
+/* Fine tune hover for secondary to match primary motion */
+button.secondary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(123, 215, 255, 0.04);
+}
+
+/* Ensure focus-visible still shows accent box-shadow without moving */
+button.secondary:focus-visible {
+  outline: none !important;
+  border-color: var(--accent2) !important;
+  box-shadow: var(--control-focus) !important;
+  transform: none !important;
+}
+
+/* Ensure keyboard/visible focus uses accent for inputs and selects (override browser defaults) */
+:focus-visible {
+    outline: none !important;
+}
+
+select:focus-visible,
+.file-meta select:focus-visible,
+.settings select:focus-visible,
+input:focus-visible,
+textarea:focus-visible {
+    outline: none !important;
+    border-color: var(--accent2) !important;
+    box-shadow: var(--control-focus) !important;
+    transform: translateY(-1px);
+}
+
+/* Keep native checkboxes/radios small and unaffected by unified height */
+input[type="checkbox"],
+input[type="radio"] {
+  height: auto;
+  width: auto;
+  padding: 0;
+  margin: 0 8px 0 0;
+  vertical-align: middle;
+  transform: none;
+  box-shadow: none;
+  cursor: pointer;
 }
 
 /* Ensure label containers align controls centrally */
