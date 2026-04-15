@@ -188,13 +188,33 @@ h1 {
 
 .row-format {
     display: flex;
-    gap: 12px;
+    gap: 8px;
     align-items: center;
-    margin-top: 6px
+    margin-top: 6px;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    white-space: nowrap;
 }
 
-.row-format select {
-    min-width: 88px
+.row-format label {
+    white-space: nowrap;
+    font-size: 12px;
+    min-width: 0;
+}
+
+.row-format .custom-select {
+    min-width: 80px;
+    max-width: 110px;
+    flex-shrink: 1;
+}
+
+.row-format .custom-select-trigger {
+    padding: 6px 10px;
+    font-size: 12px;
+}
+
+.row-format .custom-option {
+    padding: 8px 10px;
 }
 
 .file-actions {
