@@ -260,7 +260,7 @@ button.secondary {
 }
 
 /* Consolidated control styles: unify inputs, selects and buttons */
-/* This block intentionally overrides earlier scattered rules to ensure coherence */
+/* Unified controls: inputs, selects and primary buttons share sizing and visual */
 input[type="text"],
 input[type="number"],
 input[type="search"],
@@ -311,7 +311,7 @@ button,
     border-radius: 10px;
 }
 
-/* Selects: custom caret and consistent sizing */
+/* Selects: custom caret and consistent sizing (uses unified control base) */
 select,
 .file-meta select,
 .settings select {
@@ -513,17 +513,71 @@ select option {
     transform: translateY(-1px)
 }
 
-/* Keep native checkboxes/radios from inheriting the uniform control height */
-input[type="checkbox"], input[type="radio"] {
-  height: auto; /* don't force 36px tall */
-  width: auto;
-  padding: 0;
-  margin: 0 8px 0 0; /* small spacing before label text */
+/* Final unified override: ensures all controls render consistently and overrides duplicated rules */
+.final-unified-controls input,
+.final-unified-controls textarea,
+.final-unified-controls select,
+.final-unified-controls button,
+.final-unified-controls .filepicker-label,
+input[type="text"], input[type="number"], input[type="search"], textarea, select, button, .filepicker-label {
+  height: var(--control-height);
+  padding: var(--control-padding);
+  border-radius: var(--control-radius);
+  border: var(--control-border);
+  background: var(--control-bg);
+  box-shadow: var(--control-shadow-inset);
+  font-size: 13px;
+  color: var(--text);
   vertical-align: middle;
-  transform: none;
-  box-shadow: none;
-  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
 }
+
+/* Ensure selects keep the custom caret and spacing */
+select, .file-meta select, .settings select {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  padding: 8px 40px 8px 10px;
+  height: var(--control-height);
+  line-height: 20px;
+  border-radius: var(--control-radius);
+  border: var(--control-border);
+  background-repeat: no-repeat;
+  background-position: calc(100% - 12px) center;
+  background-image: linear-gradient(45deg, transparent 50%, rgba(12, 20, 30, 0.6) 50%), linear-gradient(135deg, rgba(12, 20, 30, 0.6) 50%, transparent 50%);
+  background-size: 6px 6px, 6px 6px;
+}
+
+/* Keep card actions subtle */
+.file-actions button {
+  background: linear-gradient(180deg, #fff, #f7f9fb) !important;
+  color: var(--text) !important;
+  border: 1px solid rgba(12, 20, 30, 0.06) !important;
+  padding: 6px 10px !important;
+  height: auto !important;
+  box-shadow: none !important;
+  font-weight: 600 !important;
+  border-radius: 10px !important;
+}
+
+/* maintain filepicker prominence while matching sizing */
+.filepicker-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  padding: 8px 12px;
+  border-radius: var(--control-radius);
+  background: linear-gradient(90deg, var(--accent), var(--accent2));
+  color: #fff;
+  font-weight: 700;
+  border: none;
+}
+
+/* ensure checkbox/radio remain native size */
+input[type="checkbox"], input[type="radio"] { height: auto; width: auto; padding: 0; margin: 0 8px 0 0; }
 
 /* Ensure label containers align controls centrally */
 .file-meta label, .settings .small, .controls-row label {
