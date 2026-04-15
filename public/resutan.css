@@ -137,7 +137,8 @@ h1 {
     padding: 16px;
     margin: 6px;
     display: grid;
-    grid-template-columns: 96px minmax(220px, 1fr) 140px;
+    grid-template-columns: 96px minmax(220px, 1fr) 120px;
+    grid-template-areas: "thumb meta actions";
     gap: 16px;
     align-items: start;
     border-radius: 10px;
@@ -159,6 +160,7 @@ h1 {
 }
 
 .file-meta {
+    grid-area: meta;
     display: flex;
     flex-direction: column;
     gap: 12px;
@@ -203,7 +205,7 @@ h1 {
     align-items: center;
     justify-content: flex-start;
     width: 100%;
-    max-width: 180px;
+    max-width: 160px;
     align-self: start;
 }
 
@@ -212,7 +214,8 @@ h1 {
     min-width: 90px;
     padding: 8px 10px;
     font-size: 13px;
-    white-space: nowrap;
+    text-align: center;
+    box-sizing: border-box;
 }
 
 .controls-row {
@@ -575,13 +578,16 @@ input::placeholder, textarea::placeholder {
     .file {
         grid-template-columns: 72px 1fr;
         grid-template-rows: auto auto auto;
+        grid-template-areas: "thumb meta" "thumb meta" "actions actions";
     }
 
     .file-actions {
-        margin-top: 8px;
-        grid-column: 1 / -1;
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 8px;
         justify-content: flex-start;
         max-width: none;
+        margin-top: 10px;
     }
 
     .file-actions button {
