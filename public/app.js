@@ -28,7 +28,7 @@ function render() {
 
     const img = document.createElement('img');
     img.className = 'thumb';
-    img.src = '/storage/originals/' + encodeURIComponent(it.name);
+    img.src = '/api/download/original/' + encodeURIComponent(it.name);
     img.onclick = () => window.open(img.src, '_blank');
 
     const meta = document.createElement('div');
@@ -96,7 +96,7 @@ async function createDownloads(outputs) {
     btn.addEventListener('click', (e)=>{
       e.preventDefault();
       const a = document.createElement('a');
-      a.href = '/storage/outputs/' + encodeURIComponent(fname);
+      a.href = '/api/download/output/' + encodeURIComponent(fname);
       a.download = fname;
       document.body.appendChild(a);
       a.click();
@@ -104,7 +104,7 @@ async function createDownloads(outputs) {
     });
 
     const link = document.createElement('a');
-    link.href = '/storage/outputs/' + encodeURIComponent(fname);
+    link.href = '/api/download/output/' + encodeURIComponent(fname);
     link.textContent = fname;
     link.target = '_blank';
 
@@ -119,7 +119,7 @@ async function createDownloads(outputs) {
   downloadAll.onclick = async ()=>{
     for (const fname of outputs) {
       const a = document.createElement('a');
-      a.href = '/storage/outputs/' + encodeURIComponent(fname);
+      a.href = '/api/download/output/' + encodeURIComponent(fname);
       a.download = fname;
       document.body.appendChild(a);
       a.click();

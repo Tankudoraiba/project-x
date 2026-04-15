@@ -15,25 +15,30 @@ const port = process.env.PORT || 3000;
 app.use(express.static('public'));
 app.use(express.json());
 
-// Remove or block problematic Permissions-Policy / Permission-Policy headers
-// This prevents browsers from logging warnings about unrecognized or origin-trial features
+// add cookie parser and session middleware
+const cookieParser = require('cookie-parser');
+const crypto = require('crypto');
+app.use(cookieParser());
+
 app.use((req, res, next) => {
+  // ensure a session id exists in cookie
   try {
-    // remove any already-set header
-    if (typeof res.removeHeader === 'function') {
-      res.removeHeader('Permissions-Policy');
-      res.removeHeader('Permission-Policy');
-      res.removeHeader('Sec-Permissions-Policy');
+    let sid = (req.cookies && req.cookies.sid) || null;
+    if (!sid) {
+      sid = crypto.randomBytes(12).toString('hex');
+      // httpOnly ensures JS can't read it, browser will still send it
+      res.cookie('sid', sid, { httpOnly: true, sameSite: 'lax' });
     }
-    // prevent future sets of these headers by overriding setHeader
-    const originalSet = res.setHeader.bind(res);
-    res.setHeader = (name, value) => {
-      const n = String(name).toLowerCase();
-      if (n === 'permissions-policy' || n === 'permission-policy' || n === 'sec-permissions-policy') return;
-      return originalSet(name, value);
-    };
+    req.sid = sid;
+
+    // create session-specific directories
+    req.sessionDir = path.join(storageDir, 'sessions', sid);
+    req.sessionOriginals = path.join(req.sessionDir, 'originals');
+    req.sessionOutputs = path.join(req.sessionDir, 'outputs');
+    req.sessionTmp = path.join(req.sessionDir, 'tmp');
+    [req.sessionDir, req.sessionOriginals, req.sessionOutputs, req.sessionTmp].forEach(d => { if(!fs.existsSync(d)) fs.mkdirSync(d, { recursive: true }) });
   } catch (e) {
-    // ignore
+    console.error('session middleware error', e);
   }
   next();
 });
@@ -44,23 +49,23 @@ const outputs = path.join(storageDir, 'outputs');
 const tmp = path.join(storageDir, 'tmp');
 [ storageDir, originals, outputs, tmp ].forEach(d => { if(!fs.existsSync(d)) fs.mkdirSync(d, { recursive: true }) });
 
-// serve storage (originals, outputs) over /storage
-app.use('/storage', express.static(storageDir));
-
 const upload = multer({ dest: tmp });
 
-// list stored files
+// list stored files (session-scoped)
 app.get('/api/list', (req, res) => {
-  const files = fs.readdirSync(originals).map(f => ({ name: f }));
-  res.json(files);
+  try {
+    const files = fs.readdirSync(req.sessionOriginals).map(f => ({ name: f }));
+    res.json(files);
+  } catch (e) {
+    res.json([]);
+  }
 });
 
-// upload one or many
+// upload one or many (session-scoped)
 app.post('/api/upload', upload.array('files'), async (req, res) => {
   const results = [];
   for (const file of req.files) {
-    const dest = path.join(originals, file.originalname);
-    // if HEIC, convert to jpeg for storage preview
+    const dest = path.join(req.sessionOriginals, file.originalname);
     const ext = path.extname(file.originalname).toLowerCase();
     if (ext === '.heic') {
       try {
@@ -83,25 +88,23 @@ app.post('/api/upload', upload.array('files'), async (req, res) => {
   res.json(results);
 });
 
-// process endpoint: accepts array of tasks with settings per file OR a global setting
-// tasks: [{ name, action: 'convert'|'resize'|'frames', toFormat, width, height, crop }]
+// process endpoint: accepts array of tasks with settings per file or global setting (session-scoped)
 app.post('/api/process', async (req, res) => {
   const tasks = req.body.tasks || [];
   const outFiles = [];
   for (const t of tasks) {
-    const src = path.join(originals, t.name);
+    const src = path.join(req.sessionOriginals, t.name);
     if (!fs.existsSync(src)) continue;
     const ext = (t.toFormat || path.extname(t.name).slice(1)).toLowerCase();
 
     const outNameBase = path.basename(t.name, path.extname(t.name));
     if (t.action === 'frames') {
-      // extract GIF frames using sharp by converting each frame - sharp can read animated gif as pages
       try {
         const image = sharp(src, { pages: -1 });
         const metadata = await image.metadata();
         const frames = metadata.pages || 1;
         const zipName = `${outNameBase}-frames.zip`;
-        const zipPath = path.join(outputs, zipName);
+        const zipPath = path.join(req.sessionOutputs, zipName);
         const output = fs.createWriteStream(zipPath);
         const archive = archiver('zip');
         archive.pipe(output);
@@ -118,7 +121,6 @@ app.post('/api/process', async (req, res) => {
     }
 
     let pipeline = sharp(src, { animated: true });
-    // Cropping removed. Resize uses t.preserve (boolean) to decide whether to keep aspect ratio.
     if (t.width || t.height) {
       const preserve = typeof t.preserve === 'boolean' ? t.preserve : true;
       const fit = preserve ? 'inside' : 'fill';
@@ -126,12 +128,12 @@ app.post('/api/process', async (req, res) => {
     }
 
     const outName = `${outNameBase}.${ext}`;
-    const outPath = path.join(outputs, outName);
+    const outPath = path.join(req.sessionOutputs, outName);
     try {
       if (ext === 'jpg' || ext === 'jpeg') await pipeline.jpeg().toFile(outPath);
       else if (ext === 'png') await pipeline.png().toFile(outPath);
       else if (ext === 'webp') await pipeline.webp().toFile(outPath);
-      else if (ext === 'heic') await pipeline.toFile(outPath); // sharp may write heif if libvips supports it
+      else if (ext === 'heic') await pipeline.toFile(outPath);
       else await pipeline.toFile(outPath);
       outFiles.push(outName);
     } catch (e) {
@@ -141,10 +143,39 @@ app.post('/api/process', async (req, res) => {
   res.json({ outputs: outFiles });
 });
 
-app.get('/storage/outputs/:file', (req, res) => {
-  const p = path.join(outputs, req.params.file);
+// session-scoped download endpoints
+app.get('/api/download/original/:file', (req, res) => {
+  const p = path.join(req.sessionOriginals, req.params.file);
   if (!fs.existsSync(p)) return res.status(404).send('not found');
   res.sendFile(p);
 });
+
+app.get('/api/download/output/:file', (req, res) => {
+  const p = path.join(req.sessionOutputs, req.params.file);
+  if (!fs.existsSync(p)) return res.status(404).send('not found');
+  res.sendFile(p);
+});
+
+// Cleanup job: remove session folders older than TTL
+const SESSION_TTL_MS = (parseInt(process.env.SESSION_TTL_SECONDS) || 1800) * 1000; // default 30min
+setInterval(() => {
+  try {
+    const sessionsRoot = path.join(storageDir, 'sessions');
+    if (!fs.existsSync(sessionsRoot)) return;
+    const items = fs.readdirSync(sessionsRoot);
+    const now = Date.now();
+    for (const s of items) {
+      const p = path.join(sessionsRoot, s);
+      try {
+        const st = fs.statSync(p);
+        const age = now - st.mtimeMs;
+        if (age > SESSION_TTL_MS) {
+          fs.rmSync(p, { recursive: true, force: true });
+          console.log('removed expired session', s);
+        }
+      } catch (e) {}
+    }
+  } catch (e) { console.error('cleanup job error', e); }
+}, 15 * 60 * 1000);
 
 app.listen(port, () => console.log(`Listening ${port}`));
