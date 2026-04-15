@@ -444,7 +444,10 @@ textarea,
     border-radius: var(--control-radius);
     border: var(--control-border);
     background: var(--control-bg);
-    box-shadow: var(--control-shadow-inset);
+    outline: none;
+    border-color: var(--accent2);
+    box-shadow: var(--control-focus);
+    transform: translateY(-1px);
     font-size: 13px;
     color: var(--text);
     transition: box-shadow .12s, border-color .12s, transform .06s, background .06s;
