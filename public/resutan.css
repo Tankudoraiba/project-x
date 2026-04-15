@@ -236,16 +236,12 @@ h1 {
 
 /* Unified control styles for inputs, selects, textareas, buttons, and the filepicker label */
 /* Keep native checkboxes/radios excluded so they keep browser defaults */
-input[type="text"],
-input[type="number"],
-input[type="search"],
+input:not([type="checkbox"]):not([type="radio"]),
 textarea,
 select,
 .file-meta input,
 .file-meta select,
-.settings input[type="text"],
-.settings input[type="number"],
-.settings select,
+.settings input,
 .controls-row input,
 button,
 .filepicker-label {
@@ -275,6 +271,7 @@ button,
     font-weight: 700;
     border: none;
     justify-content: center;
+    cursor: pointer;
 }
 
 /* Keep small/neutral buttons inside file cards subtle */
