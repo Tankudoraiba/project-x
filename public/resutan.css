@@ -134,11 +134,11 @@ h1 {
 
 .file {
     border: 1px solid rgba(20, 30, 60, 0.06);
-    padding: 12px;
+    padding: 16px;
     margin: 6px;
     display: grid;
-    grid-template-columns: 96px minmax(240px, 1fr) 100px;
-    gap: 12px;
+    grid-template-columns: 96px minmax(260px, 1fr) 120px;
+    gap: 16px;
     align-items: start;
     border-radius: 10px;
     background: linear-gradient(180deg, #fff, #fff);
@@ -161,7 +161,7 @@ h1 {
 .file-meta {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 12px;
 }
 
 .file-meta label {
@@ -199,13 +199,16 @@ h1 {
 .file-actions {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 12px;
     align-items: stretch;
     justify-content: flex-start;
 }
 
 .file-actions button {
     width: 100%;
+    padding: 10px 12px;
+    min-height: 44px;
+    text-align: center;
 }
 
 .controls-row {
