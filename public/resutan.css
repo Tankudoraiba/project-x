@@ -9,8 +9,8 @@
     --glass: rgba(255, 255, 255, 0.6);
     --radius: 12px;
     --shadow: 0 10px 30px rgba(20, 30, 60, 0.08);
-    --control-height: 36px;
-    --control-padding: 8px 12px;
+    --control-height: 25px;
+    --control-padding: 1px 5px;
     --control-radius: 10px;
     --control-border: 1px solid rgba(12, 20, 30, 0.06);
     --control-bg: linear-gradient(180deg, #fff, #fbfbff);
@@ -183,7 +183,7 @@ h1 {
 
 .row-dim .width,
 .row-dim .height {
-    width: 10ch
+    width: 7ch
 }
 
 .row-format {
@@ -203,8 +203,8 @@ h1 {
 }
 
 .row-format .custom-select {
-    min-width: 80px;
-    max-width: 110px;
+    min-width: 7ch;
+    max-width: 7ch;
     flex-shrink: 1;
 }
 
@@ -380,7 +380,7 @@ select,
 /* Row specific smaller selects keep consistent dimensions */
 .row-format select,
 .row-format .format {
-    min-width: 92px;
+    min-width: 7ch;
     padding-right: 40px;
     height: var(--control-height);
 }
@@ -687,7 +687,7 @@ select,
 /* Keep smaller selects inside rows consistent */
 .row-format select,
 .row-format .format {
-    min-width: 92px;
+    min-width: 7ch;
     padding-right: 40px;
     height: var(--control-height);
 }
