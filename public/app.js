@@ -16,7 +16,7 @@ const formatOptions = ['png','jpg','webp','heic'];
 function renderEmptyState() {
   if (items.length === 0) {
     filesDiv.classList.add('empty');
-    filesDiv.innerHTML = '<div class="empty-msg">No files yet</div>';
+    filesDiv.innerHTML = '<div class="empty-msg"></div>';
   } else {
     filesDiv.classList.remove('empty');
   }
