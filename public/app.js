@@ -129,6 +129,7 @@ document.getElementById('process').addEventListener('click', async ()=>{
     const outputs = j.outputs || [];
     createDownloads(outputs);
     statusSpan.textContent = 'Done';
+    setTimeout(() => { if (statusSpan.textContent === 'Done') statusSpan.textContent = ''; }, 2500);
   }catch(e){
     console.error(e);
     statusSpan.textContent = 'Processing failed';
