@@ -349,9 +349,15 @@ button,
     justify-content: center;
 }
 
-.custom-options,
-input#defaultWidth,
-input#defaultHeight,
+.custom-options{
+    width: 7ch;
+}
+input#defaultWidth{
+    width: 7ch;
+}
+input#defaultHeight{
+    width: 7ch;
+}
 button.custom-select-trigger{
     width: 7ch;
 }
