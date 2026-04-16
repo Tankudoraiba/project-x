@@ -349,6 +349,14 @@ button,
     justify-content: center;
 }
 
+.custom-options,
+input#defaultWidth,
+input#defaultHeight,
+button.custom-select-trigger{
+    width: 7ch;
+}
+
+
 /* Neutral/smaller buttons inside cards should remain subtle */
 .file-actions button {
     background: linear-gradient(180deg, #fff, #f7f9fb);
