@@ -75,6 +75,7 @@ function render() {
 
   // disable process if no items
   document.getElementById('process').disabled = items.length === 0;
+  document.getElementById('downloadAll').disabled = !items.some(it => !!it.output);
   renderEmptyState();
   attachCustomDropdowns();
 }
@@ -132,6 +133,20 @@ document.getElementById('process').addEventListener('click', async ()=>{
     console.error(e);
     statusSpan.textContent = 'Processing failed';
   }
+});
+
+document.getElementById('downloadAll').addEventListener('click', (e) => {
+  e.preventDefault();
+  if (!items.some(it => !!it.output)) {
+    statusSpan.textContent = 'Nothing to download yet';
+    return;
+  }
+  const a = document.createElement('a');
+  a.href = '/api/download/all?_=' + Date.now();
+  a.download = 'resutan-outputs.zip';
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
 });
 
 function createCustomFormatSelect(idx, selected) {

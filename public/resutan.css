@@ -226,6 +226,10 @@ h1 {
     flex-wrap: wrap;
 }
 
+.actions{
+    text-align: center;
+}
+
 .file-actions button {
     flex: 1 1 calc(50% - 5px);
     min-width: 0;
