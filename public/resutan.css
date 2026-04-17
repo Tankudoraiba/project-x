@@ -623,6 +623,30 @@ input::placeholder, textarea::placeholder {
         flex: 1 1 calc(50% - 10px);
         min-width: 0;
     }
+
+    #drop {
+        flex-wrap: wrap;
+    }
+
+    .settings {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        align-items: stretch;
+    }
+
+    .settings .small {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        justify-content: center;
+    }
+
+    .settings .small input,
+    .settings .small .custom-select,
+    .settings .small button {
+        min-width: 0;
+    }
 }
 
 /* Unified controls override: normalize inputs, selects, textareas and buttons
