@@ -129,6 +129,7 @@ app.post('/api/process', async (req, res) => {
     const outPath = path.join(req.sessionOutputs, outName);
     try {
       let pipeline = sharp(src, { animated: true });
+      pipeline = pipeline.withMetadata();
       if (t.width || t.height) {
         const preserve = typeof t.preserve === 'boolean' ? t.preserve : true;
         const fit = preserve ? 'inside' : 'fill';
