@@ -882,6 +882,6 @@ input[type="radio"] {
 
 /* Ensure the app container has a minimum size */
 body {
-    min-width: 650px;
+    min-width: 320px;
     min-height: 480px;
 }
