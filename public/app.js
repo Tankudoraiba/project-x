@@ -9,6 +9,7 @@ const defaultHeightInput = document.getElementById('defaultHeight');
 const defaultFormatSelect = document.getElementById('defaultFormat');
 const applyDefaultsBtn = document.getElementById('applyDefaults');
 const statusSpan = document.getElementById('status');
+const uploadStatusSpan = document.getElementById('uploadStatus');
 
 const formatOptions = ['png','jpg','webp','heic'];
 
@@ -83,41 +84,32 @@ function render() {
 // ensure UI renders on load
 render();
 
+function showUploadProgress(text) {
+  uploadStatusSpan.textContent = text;
+}
+
+function hideUploadStatus() {
+  uploadStatusSpan.textContent = '';
+}
+
+function showTopLoader(text) {
+  statusText.textContent = text;
+  progressWrapper.classList.remove('hidden');
+}
+
 function handleFiles(files) {
+  showUploadProgress('Uploading…');
   const form = new FormData();
   for (const f of files) form.append('files', f, f.name);
-  showTopLoader('Uploading…');
-
-  return new Promise((resolve, reject) => {
-    const xhr = new XMLHttpRequest();
-    xhr.open('POST', '/api/upload');
-    xhr.upload.onprogress = (event) => {
-      if (event.lengthComputable) {
-        updateTopProgress(Math.round((event.loaded / event.total) * 100));
-      }
-    };
-    xhr.onload = () => {
-      if (xhr.status >= 200 && xhr.status < 300) {
-        resolve(JSON.parse(xhr.responseText));
-      } else {
-        reject(new Error('Upload failed'));
-      }
-    };
-    xhr.onerror = () => reject(new Error('Upload failed'));
-    xhr.send(form);
-  }).then(list => {
+  fetch('/api/upload', { method: 'POST', body: form }).then(r=>r.json()).then(list=>{
     const defaultW = parseInt(defaultWidthInput.value) || null;
     const defaultH = parseInt(defaultHeightInput.value) || null;
     const defaultFormat = defaultFormatSelect.value || 'png';
-    list.forEach(l => items.push({ name: l.saved, preserve: defaultPreserveCheckbox.checked, width: defaultW, height: defaultH, format: defaultFormat }));
+    list.forEach(l=>items.push({ name: l.saved, preserve: defaultPreserveCheckbox.checked, width: defaultW, height: defaultH, format: defaultFormat }));
     render();
-  }).catch(e => {
-    console.error(e);
-    statusSpan.textContent = 'Upload failed';
-  }).finally(() => {
-    hideTopLoader();
-    try { picker.value = ''; } catch (e) {}
-  });
+    showUploadProgress('Upload complete');
+  }).catch(e=>{ console.error(e); statusSpan.textContent = 'Upload failed'; showUploadProgress('Upload failed'); })
+  .finally(()=>{ hideUploadStatus(); try { picker.value = ''; } catch(e){} });
 }
 
 drop.addEventListener('drop', (e)=>{e.preventDefault(); handleFiles(e.dataTransfer.files)});
@@ -229,22 +221,3 @@ applyDefaultsBtn.addEventListener('click', ()=>{
   items = items.map(it => ({ ...it, width: defaultW, height: defaultH, preserve: defaultPreserve, format: defaultFormat }));
   render();
 });
-
-const progressWrapper = document.getElementById('topProgress');
-const progressFill = document.getElementById('progressFill');
-const progressLabel = document.getElementById('progressLabel');
-
-function showTopLoader(label) {
-  progressLabel.textContent = label;
-  progressFill.style.width = '0%';
-  progressWrapper.classList.remove('hidden');
-}
-
-function updateTopProgress(percent) {
-  progressFill.style.width = `${percent}%`;
-}
-
-function hideTopLoader() {
-  progressWrapper.classList.add('hidden');
-  progressFill.style.width = '0%';
-}
