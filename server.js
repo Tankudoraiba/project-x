@@ -73,10 +73,8 @@ app.post('/api/upload', upload.array('files'), async (req, res) => {
     const ext = path.extname(file.originalname).toLowerCase();
     if (ext === '.heic') {
       try {
-        const input = fs.readFileSync(file.path);
-        const decoded = await decode(input);
         const outPath = dest.replace(/\.heic$/i, '.jpg');
-        await sharp(decoded.data, { raw: { width: decoded.width, height: decoded.height, channels: decoded.channels } }).jpeg().toFile(outPath);
+        await sharp(file.path).jpeg().toFile(outPath);
         fs.unlinkSync(file.path);
         results.push({ saved: path.basename(outPath) });
       } catch (e) {

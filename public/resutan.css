@@ -607,7 +607,6 @@ input::placeholder, textarea::placeholder {
     }
 
     .file {
-        grid-template-columns: 72px 1fr;
         grid-template-rows: auto auto auto;
         grid-template-areas:
           "thumb meta"
