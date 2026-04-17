@@ -12,36 +12,6 @@ const statusSpan = document.getElementById('status');
 
 const formatOptions = ['png','jpg','webp','heic'];
 
-// top progress bar helpers
-const topLoader = document.getElementById('topLoader');
-const progressFill = document.getElementById('progressFill');
-let topProgressInterval = null;
-
-function showTopLoader() {
-  if (!topLoader) return;
-  topLoader.classList.remove('hidden');
-  progressFill.style.width = '8%';
-}
-
-function hideTopLoader() {
-  if (!topLoader) return;
-  clearInterval(topProgressInterval);
-  progressFill.style.width = '100%';
-  setTimeout(() => {
-    topLoader.classList.add('hidden');
-    progressFill.style.width = '0%';
-  }, 220);
-}
-
-function startProcessingProgress() {
-  showTopLoader();
-  clearInterval(topProgressInterval);
-  topProgressInterval = setInterval(() => {
-    const cur = parseInt(progressFill.style.width, 10) || 0;
-    if (cur < 75) progressFill.style.width = `${Math.min(75, cur + 4)}%`;
-  }, 180);
-}
-
 // helper to render empty state
 function renderEmptyState() {
   if (items.length === 0) {
@@ -116,21 +86,21 @@ render();
 function handleFiles(files) {
   const form = new FormData();
   for (const f of files) form.append('files', f, f.name);
-  showTopLoader();
+  showTopLoader('Uploading…');
+
   return new Promise((resolve, reject) => {
     const xhr = new XMLHttpRequest();
     xhr.open('POST', '/api/upload');
-    xhr.upload.onprogress = (e) => {
-      if (e.lengthComputable) {
-        const percent = Math.round(8 + (e.loaded / e.total) * 70);
-        progressFill.style.width = `${Math.min(percent, 85)}%`;
+    xhr.upload.onprogress = (event) => {
+      if (event.lengthComputable) {
+        updateTopProgress(Math.round((event.loaded / event.total) * 100));
       }
     };
     xhr.onload = () => {
       if (xhr.status >= 200 && xhr.status < 300) {
         resolve(JSON.parse(xhr.responseText));
       } else {
-        reject(new Error(`Upload failed: ${xhr.status}`));
+        reject(new Error('Upload failed'));
       }
     };
     xhr.onerror = () => reject(new Error('Upload failed'));
@@ -167,7 +137,6 @@ async function createDownloads(outputs) {
 // updated process handler
 document.getElementById('process').addEventListener('click', async ()=>{
   statusSpan.textContent = 'Processing...';
-  startProcessingProgress();
   const tasks = items.map((it, idx)=>{
     const format = document.querySelector(`.format[data-idx='${idx}']`).value;
     const widthVal = document.querySelector(`.width[data-idx='${idx}']`).value;
@@ -187,8 +156,6 @@ document.getElementById('process').addEventListener('click', async ()=>{
   }catch(e){
     console.error(e);
     statusSpan.textContent = 'Processing failed';
-  } finally {
-    hideTopLoader();
   }
 });
 
@@ -262,3 +229,22 @@ applyDefaultsBtn.addEventListener('click', ()=>{
   items = items.map(it => ({ ...it, width: defaultW, height: defaultH, preserve: defaultPreserve, format: defaultFormat }));
   render();
 });
+
+const progressWrapper = document.getElementById('topProgress');
+const progressFill = document.getElementById('progressFill');
+const progressLabel = document.getElementById('progressLabel');
+
+function showTopLoader(label) {
+  progressLabel.textContent = label;
+  progressFill.style.width = '0%';
+  progressWrapper.classList.remove('hidden');
+}
+
+function updateTopProgress(percent) {
+  progressFill.style.width = `${percent}%`;
+}
+
+function hideTopLoader() {
+  progressWrapper.classList.add('hidden');
+  progressFill.style.width = '0%';
+}
