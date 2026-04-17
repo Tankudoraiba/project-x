@@ -94,9 +94,13 @@ app.post('/api/upload', upload.array('files'), async (req, res) => {
 app.post('/api/process', async (req, res) => {
   const tasks = req.body.tasks || [];
   const outFiles = [];
+  const missing = [];
   for (const t of tasks) {
     const src = path.join(req.sessionOriginals, t.name);
-    if (!fs.existsSync(src)) continue;
+    if (!fs.existsSync(src)) {
+      missing.push(t.name);
+      continue;
+    }
     const ext = (t.toFormat || path.extname(t.name).slice(1)).toLowerCase();
 
     const outNameBase = path.basename(t.name, path.extname(t.name));
@@ -144,7 +148,7 @@ app.post('/api/process', async (req, res) => {
       console.error('process error', e);
     }
   }
-  res.json({ outputs: outFiles });
+  res.json({ outputs: outFiles, missing });
 });
 
 // session-scoped download endpoints

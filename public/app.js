@@ -143,7 +143,14 @@ document.getElementById('process').addEventListener('click', async ()=>{
     const j = await res.json();
     const outputs = j.outputs || [];
     createDownloads(outputs);
-    statusSpan.textContent = 'Done';
+    if (j.missing && j.missing.length > 0) {
+      const missingSet = new Set(j.missing);
+      items = items.filter(it => !missingSet.has(it.name));
+      render();
+      statusSpan.textContent = `Session expired: removed ${j.missing.length} expired item(s). Please re-upload missing files.`;
+    } else {
+      statusSpan.textContent = 'Done';
+    }
     setTimeout(() => { if (statusSpan.textContent === 'Done') statusSpan.textContent = ''; }, 2500);
   }catch(e){
     console.error(e);
