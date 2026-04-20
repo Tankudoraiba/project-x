@@ -51,6 +51,7 @@ const storageDir = path.join(__dirname, 'storage');
 const originals = path.join(storageDir, 'originals');
 const outputs = path.join(storageDir, 'outputs');
 const tmp = path.join(storageDir, 'tmp');
+const upload = multer({ dest: tmp });
 const LOG_DIR = path.join(storageDir, 'logs');
 const LOG_FILE = path.join(LOG_DIR, 'server.log');
 [ storageDir, originals, outputs, tmp, LOG_DIR ].forEach(d => { if(!fs.existsSync(d)) fs.mkdirSync(d, { recursive: true }) });
