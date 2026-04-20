@@ -51,9 +51,20 @@ const storageDir = path.join(__dirname, 'storage');
 const originals = path.join(storageDir, 'originals');
 const outputs = path.join(storageDir, 'outputs');
 const tmp = path.join(storageDir, 'tmp');
-[ storageDir, originals, outputs, tmp ].forEach(d => { if(!fs.existsSync(d)) fs.mkdirSync(d, { recursive: true }) });
+const LOG_DIR = path.join(storageDir, 'logs');
+const LOG_FILE = path.join(LOG_DIR, 'server.log');
+[ storageDir, originals, outputs, tmp, LOG_DIR ].forEach(d => { if(!fs.existsSync(d)) fs.mkdirSync(d, { recursive: true }) });
 
-const upload = multer({ dest: tmp });
+function log(message) {
+  const line = `[${new Date().toISOString()}] ${message}`;
+  console.log(line);
+  try { fs.appendFileSync(LOG_FILE, line + '\n'); } catch (e) { console.error('Failed to write log:', e); }
+}
+
+function logError(err) {
+  const message = err && err.stack ? err.stack : String(err);
+  log(`ERROR: ${message}`);
+}
 
 // list stored files (session-scoped)
 app.get('/api/list', (req, res) => {
@@ -196,6 +207,12 @@ app.get('/api/download/all', (req, res) => {
   archive.finalize();
 });
 
+app.use((err, req, res, next) => {
+  logError(err);
+  if (res.headersSent) return next(err);
+  res.status(500).json({ error: 'Internal server error' });
+});
+
 // Cleanup job: remove session folders older than TTL
 const SESSION_TTL_MS = (parseInt(process.env.SESSION_TTL_SECONDS) || 1800) * 1000; // default 30min
 setInterval(() => {
@@ -211,11 +228,29 @@ setInterval(() => {
         const age = now - st.mtimeMs;
         if (age > SESSION_TTL_MS) {
           fs.rmSync(p, { recursive: true, force: true });
-          console.log('removed expired session', s);
+          log(`removed expired session ${s}`);
         }
-      } catch (e) {}
+      } catch (e) { logError(e); }
     }
-  } catch (e) { console.error('cleanup job error', e); }
+  } catch (e) { logError(e); }
 }, 15 * 60 * 1000);
 
-app.listen(port, () => console.log(`Listening ${port}`));
+process.on('uncaughtException', err => {
+  logError(`uncaughtException: ${err}`);
+  process.exit(1);
+});
+
+process.on('unhandledRejection', (reason, promise) => {
+  logError(`unhandledRejection: ${reason}`);
+});
+
+process.on('SIGTERM', () => log('SIGTERM received, shutting down'));
+process.on('SIGINT', () => log('SIGINT received, shutting down'));
+process.on('SIGQUIT', () => log('SIGQUIT received, shutting down'));
+process.on('exit', code => log(`Process exiting with code ${code}`));
+process.on('beforeExit', code => log(`Process beforeExit with code ${code}`));
+process.on('uncaughtExceptionMonitor', err => logError(`uncaughtExceptionMonitor: ${err}`));
+process.on('warning', warning => logError(`Warning: ${warning.name} ${warning.message}\n${warning.stack}`));
+
+const server = app.listen(port, () => log(`Listening ${port} pid=${process.pid} env=${process.env.NODE_ENV || 'development'}`));
+server.on('error', err => logError(`Server error: ${err}`));
