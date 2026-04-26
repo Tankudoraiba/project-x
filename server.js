@@ -118,7 +118,7 @@ app.post('/api/process', async (req, res) => {
     const outNameBase = path.basename(t.name, path.extname(t.name));
     if (t.action === 'frames') {
       try {
-        const image = sharp(src, { pages: -1 });
+        const image = sharp(src, { pages: -1, limitInputPixels: false });
         const metadata = await image.metadata();
         const frames = metadata.pages || 1;
         const zipName = `${outNameBase}-${randomSuffix(4)}-frames.zip`;
@@ -127,7 +127,7 @@ app.post('/api/process', async (req, res) => {
         const archive = archiver('zip');
         archive.pipe(output);
         for (let i = 0; i < frames; i++) {
-          const buf = await sharp(src, { page: i }).png().toBuffer();
+          const buf = await sharp(src, { page: i, limitInputPixels: false }).png().toBuffer();
           archive.append(buf, { name: `${outNameBase}-frame-${i}.png` });
         }
         await archive.finalize();
@@ -142,7 +142,7 @@ app.post('/api/process', async (req, res) => {
     const outName = `${outNameBase}-${rand}.${ext}`;
     const outPath = path.join(req.sessionOutputs, outName);
     try {
-      let pipeline = sharp(src, { animated: true });
+      let pipeline = sharp(src, { animated: true, limitInputPixels: false });
       pipeline = pipeline.withMetadata();
       if (t.width || t.height) {
         const preserve = typeof t.preserve === 'boolean' ? t.preserve : true;
