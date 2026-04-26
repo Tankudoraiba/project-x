@@ -153,8 +153,10 @@ app.post('/api/process', async (req, res) => {
       if (ext === 'jpg' || ext === 'jpeg') await pipeline.jpeg().toFile(outPath);
       else if (ext === 'png') await pipeline.png().toFile(outPath);
       else if (ext === 'webp') await pipeline.webp().toFile(outPath);
+      else if (ext === 'gif') await pipeline.gif().toFile(outPath);
       else if (ext === 'heic') await pipeline.toFile(outPath);
       else await pipeline.toFile(outPath);
+
       outFiles.push({ input: t.name, output: outName });
     } catch (e) {
       console.error('process error', e);
