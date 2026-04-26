@@ -11,7 +11,7 @@ const applyDefaultsBtn = document.getElementById('applyDefaults');
 const statusSpan = document.getElementById('status');
 const uploadStatusSpan = document.getElementById('uploadStatus');
 
-const formatOptions = ['png','jpg','webp','heic','gif'];
+const formatOptions = ['png','jpg','webp','heic'];
 
 // helper to render empty state
 function renderEmptyState() {

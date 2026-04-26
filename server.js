@@ -54,8 +54,6 @@ const tmp = path.join(storageDir, 'tmp');
 const upload = multer({ dest: tmp });
 const LOG_DIR = path.join(storageDir, 'logs');
 const LOG_FILE = path.join(LOG_DIR, 'server.log');
-const PROCESS_TIMEOUT_MS = parseInt(process.env.PROCESS_TIMEOUT_MS) || 120000;
-const GIF_PROCESS_TIMEOUT_MS = parseInt(process.env.GIF_PROCESS_TIMEOUT_MS) || PROCESS_TIMEOUT_MS * 2;
 [ storageDir, originals, outputs, tmp, LOG_DIR ].forEach(d => { if(!fs.existsSync(d)) fs.mkdirSync(d, { recursive: true }) });
 
 function log(message) {
@@ -67,14 +65,6 @@ function log(message) {
 function logError(err) {
   const message = err && err.stack ? err.stack : String(err);
   log(`ERROR: ${message}`);
-}
-
-function withTimeout(promise, ms, label = '') {
-  let timeoutId;
-  const timeout = new Promise((_, reject) => {
-    timeoutId = setTimeout(() => reject(new Error(`timeout after ${ms}ms${label ? ` (${label})` : ''}`)), ms);
-  });
-  return Promise.race([promise, timeout]).finally(() => clearTimeout(timeoutId));
 }
 
 // list stored files (session-scoped)
@@ -117,71 +107,60 @@ app.post('/api/process', async (req, res) => {
   const tasks = req.body.tasks || [];
   const outFiles = [];
   const missing = [];
-  const taskErrors = [];
-  log(`process request: ${tasks.length} task(s) for session ${req.sid}`);
-  try {
-    for (const t of tasks) {
-      const src = path.join(req.sessionOriginals, t.name);
-      if (!fs.existsSync(src)) {
-        missing.push(t.name);
-        continue;
-      }
-      const ext = (t.toFormat || path.extname(t.name).slice(1)).toLowerCase();
-
-      const outNameBase = path.basename(t.name, path.extname(t.name));
-      if (t.action === 'frames') {
-        try {
-          const image = sharp(src, { pages: -1, limitInputPixels: false });
-          const metadata = await image.metadata();
-          const frames = metadata.pages || 1;
-          const zipName = `${outNameBase}-${randomSuffix(4)}-frames.zip`;
-          const zipPath = path.join(req.sessionOutputs, zipName);
-          const output = fs.createWriteStream(zipPath);
-          const archive = archiver('zip');
-          archive.pipe(output);
-          for (let i = 0; i < frames; i++) {
-            const buf = await sharp(src, { page: i, limitInputPixels: false }).png().toBuffer();
-            archive.append(buf, { name: `${outNameBase}-frame-${i}.png` });
-          }
-          await archive.finalize();
-          outFiles.push({ input: t.name, output: zipName });
-        } catch (e) {
-          logError(`frames processing error [${t.name}]: ${e}`);
-          taskErrors.push({ input: t.name, action: 'frames', error: e.message || String(e), stack: e.stack });
-        }
-        continue;
-      }
-
-      const rand = randomSuffix(4);
-      const outName = `${outNameBase}-${rand}.${ext}`;
-      const outPath = path.join(req.sessionOutputs, outName);
-      try {
-        let pipeline = sharp(src, { animated: true, limitInputPixels: false });
-        pipeline = pipeline.withMetadata();
-        if (t.width || t.height) {
-          const preserve = typeof t.preserve === 'boolean' ? t.preserve : true;
-          const fit = preserve ? 'inside' : 'fill';
-          pipeline = pipeline.resize(t.width || null, t.height || null, { fit });
-        }
-
-        if (ext === 'jpg' || ext === 'jpeg') await withTimeout(pipeline.jpeg().toFile(outPath), PROCESS_TIMEOUT_MS, `jpg-${t.name}`);
-        else if (ext === 'png') await withTimeout(pipeline.png().toFile(outPath), PROCESS_TIMEOUT_MS, `png-${t.name}`);
-        else if (ext === 'webp') await withTimeout(pipeline.webp().toFile(outPath), PROCESS_TIMEOUT_MS, `webp-${t.name}`);
-        else if (ext === 'gif') await withTimeout(pipeline.gif().toFile(outPath), GIF_PROCESS_TIMEOUT_MS, `gif-${t.name}`);
-        else if (ext === 'heic') await withTimeout(pipeline.toFile(outPath), PROCESS_TIMEOUT_MS, `heic-${t.name}`);
-        else await withTimeout(pipeline.toFile(outPath), PROCESS_TIMEOUT_MS, `default-${t.name}`);
-
-        outFiles.push({ input: t.name, output: outName });
-      } catch (e) {
-        logError(`process task error [${t.name}] [${ext}]: ${e}`);
-        taskErrors.push({ input: t.name, error: e.message || String(e), stack: e.stack });
-      }
+  for (const t of tasks) {
+    const src = path.join(req.sessionOriginals, t.name);
+    if (!fs.existsSync(src)) {
+      missing.push(t.name);
+      continue;
     }
-  } catch (e) {
-    logError(`process endpoint failed: ${e}`);
-    return res.status(500).json({ error: 'Processing failed', details: e.message || String(e), errors: taskErrors });
+    const ext = (t.toFormat || path.extname(t.name).slice(1)).toLowerCase();
+
+    const outNameBase = path.basename(t.name, path.extname(t.name));
+    if (t.action === 'frames') {
+      try {
+        const image = sharp(src, { pages: -1 });
+        const metadata = await image.metadata();
+        const frames = metadata.pages || 1;
+        const zipName = `${outNameBase}-${randomSuffix(4)}-frames.zip`;
+        const zipPath = path.join(req.sessionOutputs, zipName);
+        const output = fs.createWriteStream(zipPath);
+        const archive = archiver('zip');
+        archive.pipe(output);
+        for (let i = 0; i < frames; i++) {
+          const buf = await sharp(src, { page: i }).png().toBuffer();
+          archive.append(buf, { name: `${outNameBase}-frame-${i}.png` });
+        }
+        await archive.finalize();
+        outFiles.push({ input: t.name, output: zipName });
+      } catch (e) {
+        console.error('frames error', e);
+      }
+      continue;
+    }
+
+    const rand = randomSuffix(4);
+    const outName = `${outNameBase}-${rand}.${ext}`;
+    const outPath = path.join(req.sessionOutputs, outName);
+    try {
+      let pipeline = sharp(src, { animated: true });
+      pipeline = pipeline.withMetadata();
+      if (t.width || t.height) {
+        const preserve = typeof t.preserve === 'boolean' ? t.preserve : true;
+        const fit = preserve ? 'inside' : 'fill';
+        pipeline = pipeline.resize(t.width || null, t.height || null, { fit });
+      }
+
+      if (ext === 'jpg' || ext === 'jpeg') await pipeline.jpeg().toFile(outPath);
+      else if (ext === 'png') await pipeline.png().toFile(outPath);
+      else if (ext === 'webp') await pipeline.webp().toFile(outPath);
+      else if (ext === 'heic') await pipeline.toFile(outPath);
+      else await pipeline.toFile(outPath);
+      outFiles.push({ input: t.name, output: outName });
+    } catch (e) {
+      console.error('process error', e);
+    }
   }
-  res.json({ outputs: outFiles, missing, errors: taskErrors });
+  res.json({ outputs: outFiles, missing });
 });
 
 // session-scoped download endpoints
