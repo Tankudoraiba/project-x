@@ -3,7 +3,6 @@ const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
 const sharp = require('sharp');
-sharp.limitInputPixels(false);
 const archiver = require('archiver');
 // support both CommonJS and ESM-style default export from heic-decode
 const _heicDecode = require('heic-decode');
