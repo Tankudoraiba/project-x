@@ -163,12 +163,12 @@ app.post('/api/process', async (req, res) => {
           pipeline = pipeline.resize(t.width || null, t.height || null, { fit });
         }
 
-        if (ext === 'jpg' || ext === 'jpeg') await pipeline.jpeg().toFile(outPath);
-        else if (ext === 'png') await pipeline.png().toFile(outPath);
-        else if (ext === 'webp') await pipeline.webp().toFile(outPath);
-        else if (ext === 'gif') await pipeline.gif().toFile(outPath);
-        else if (ext === 'heic') await pipeline.toFile(outPath);
-        else await pipeline.toFile(outPath);
+        if (ext === 'jpg' || ext === 'jpeg') await withTimeout(pipeline.jpeg().toFile(outPath), PROCESS_TIMEOUT_MS, `jpg-${t.name}`);
+        else if (ext === 'png') await withTimeout(pipeline.png().toFile(outPath), PROCESS_TIMEOUT_MS, `png-${t.name}`);
+        else if (ext === 'webp') await withTimeout(pipeline.webp().toFile(outPath), PROCESS_TIMEOUT_MS, `webp-${t.name}`);
+        else if (ext === 'gif') await withTimeout(pipeline.gif({ effort: 6, reoptimise: true }).toFile(outPath), PROCESS_TIMEOUT_MS, `gif-${t.name}`);
+        else if (ext === 'heic') await withTimeout(pipeline.toFile(outPath), PROCESS_TIMEOUT_MS, `heic-${t.name}`);
+        else await withTimeout(pipeline.toFile(outPath), PROCESS_TIMEOUT_MS, `default-${t.name}`);
 
         outFiles.push({ input: t.name, output: outName });
       } catch (e) {
