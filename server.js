@@ -54,6 +54,7 @@ const tmp = path.join(storageDir, 'tmp');
 const upload = multer({ dest: tmp });
 const LOG_DIR = path.join(storageDir, 'logs');
 const LOG_FILE = path.join(LOG_DIR, 'server.log');
+const PROCESS_TIMEOUT_MS = parseInt(process.env.PROCESS_TIMEOUT_MS) || 55000;
 [ storageDir, originals, outputs, tmp, LOG_DIR ].forEach(d => { if(!fs.existsSync(d)) fs.mkdirSync(d, { recursive: true }) });
 
 function log(message) {
@@ -65,6 +66,14 @@ function log(message) {
 function logError(err) {
   const message = err && err.stack ? err.stack : String(err);
   log(`ERROR: ${message}`);
+}
+
+function withTimeout(promise, ms, label = '') {
+  let timeoutId;
+  const timeout = new Promise((_, reject) => {
+    timeoutId = setTimeout(() => reject(new Error(`timeout after ${ms}ms${label ? ` (${label})` : ''}`)), ms);
+  });
+  return Promise.race([promise, timeout]).finally(() => clearTimeout(timeoutId));
 }
 
 // list stored files (session-scoped)
