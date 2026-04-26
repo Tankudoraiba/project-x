@@ -54,7 +54,8 @@ const tmp = path.join(storageDir, 'tmp');
 const upload = multer({ dest: tmp });
 const LOG_DIR = path.join(storageDir, 'logs');
 const LOG_FILE = path.join(LOG_DIR, 'server.log');
-const PROCESS_TIMEOUT_MS = parseInt(process.env.PROCESS_TIMEOUT_MS) || 55000;
+const PROCESS_TIMEOUT_MS = parseInt(process.env.PROCESS_TIMEOUT_MS) || 120000;
+const GIF_PROCESS_TIMEOUT_MS = parseInt(process.env.GIF_PROCESS_TIMEOUT_MS) || PROCESS_TIMEOUT_MS * 2;
 [ storageDir, originals, outputs, tmp, LOG_DIR ].forEach(d => { if(!fs.existsSync(d)) fs.mkdirSync(d, { recursive: true }) });
 
 function log(message) {
@@ -166,7 +167,7 @@ app.post('/api/process', async (req, res) => {
         if (ext === 'jpg' || ext === 'jpeg') await withTimeout(pipeline.jpeg().toFile(outPath), PROCESS_TIMEOUT_MS, `jpg-${t.name}`);
         else if (ext === 'png') await withTimeout(pipeline.png().toFile(outPath), PROCESS_TIMEOUT_MS, `png-${t.name}`);
         else if (ext === 'webp') await withTimeout(pipeline.webp().toFile(outPath), PROCESS_TIMEOUT_MS, `webp-${t.name}`);
-        else if (ext === 'gif') await withTimeout(pipeline.gif({ effort: 6, reoptimise: true }).toFile(outPath), PROCESS_TIMEOUT_MS, `gif-${t.name}`);
+        else if (ext === 'gif') await withTimeout(pipeline.gif().toFile(outPath), GIF_PROCESS_TIMEOUT_MS, `gif-${t.name}`);
         else if (ext === 'heic') await withTimeout(pipeline.toFile(outPath), PROCESS_TIMEOUT_MS, `heic-${t.name}`);
         else await withTimeout(pipeline.toFile(outPath), PROCESS_TIMEOUT_MS, `default-${t.name}`);
 
