@@ -3,7 +3,8 @@ const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
 const sharp = require('sharp');
-const archiver = require('archiver');
+const _archiver = require('archiver');
+const ZipArchive = _archiver.ZipArchive || (_archiver.default && _archiver.default.ZipArchive);
 // support both CommonJS and ESM-style default export from heic-decode
 const _heicDecode = require('heic-decode');
 const decode = (_heicDecode && (_heicDecode.default || _heicDecode)) || null;
@@ -129,7 +130,7 @@ app.post('/api/process', async (req, res) => {
         const zipName = `${outNameBase}-${randomSuffix(4)}-frames.zip`;
         const zipPath = path.join(req.sessionOutputs, zipName);
         const output = fs.createWriteStream(zipPath);
-        const archive = archiver('zip');
+        const archive = new ZipArchive();
         archive.pipe(output);
         for (let i = 0; i < frames; i++) {
           const buf = await sharp(src, { page: i }).png().toBuffer();
@@ -199,7 +200,7 @@ app.get('/api/download/all', (req, res) => {
   res.setHeader('Content-Type', 'application/zip');
   res.setHeader('Content-Disposition', 'attachment; filename="resutan-outputs.zip"');
 
-  const archive = archiver('zip', { zlib: { level: 9 } });
+  const archive = new ZipArchive({ zlib: { level: 9 } });
   archive.on('error', err => {
     console.error('zip error', err);
     if (!res.headersSent) res.status(500).send('Archive creation failed');
