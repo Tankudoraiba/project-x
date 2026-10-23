@@ -1,4 +1,4 @@
-FROM node:18-bullseye
+FROM node:22-bookworm
 
 # Install system deps for image processing
 RUN apt-get update && apt-get install -y --no-install-recommends \
