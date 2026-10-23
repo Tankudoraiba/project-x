@@ -129,6 +129,8 @@ async function createDownloads(outputs) {
 // updated process handler
 document.getElementById('process').addEventListener('click', async ()=>{
   statusSpan.textContent = 'Processing...';
+  items.forEach(it => { delete it.output; });
+  render();
   const tasks = items.map((it, idx)=>{
     const format = document.querySelector(`.format[data-idx='${idx}']`).value;
     const widthVal = document.querySelector(`.width[data-idx='${idx}']`).value;

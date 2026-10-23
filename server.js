@@ -104,6 +104,11 @@ app.post('/api/upload', upload.array('files'), async (req, res) => {
 
 // process endpoint: accepts array of tasks with settings per file or global setting (session-scoped)
 app.post('/api/process', async (req, res) => {
+  // Each process run replaces the previous output set for this session.
+  for (const file of fs.readdirSync(req.sessionOutputs)) {
+    fs.rmSync(path.join(req.sessionOutputs, file), { recursive: true, force: true });
+  }
+
   const tasks = req.body.tasks || [];
   const outFiles = [];
   const missing = [];
