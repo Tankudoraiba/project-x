@@ -68,6 +68,12 @@ function logError(err) {
   log(`ERROR: ${message}`);
 }
 
+function normalizeFilename(name) {
+  if (!/[\u00c3\u00c2\u00e2]|[\u0080-\u009f]/.test(name)) return name;
+  const repaired = Buffer.from(name, 'latin1').toString('utf8');
+  return repaired.includes('\ufffd') ? name : repaired;
+}
+
 // list stored files (session-scoped)
 app.get('/api/list', (req, res) => {
   try {
@@ -82,8 +88,9 @@ app.get('/api/list', (req, res) => {
 app.post('/api/upload', upload.array('files'), async (req, res) => {
   const results = [];
   for (const file of req.files) {
-    const dest = path.join(req.sessionOriginals, file.originalname);
-    const ext = path.extname(file.originalname).toLowerCase();
+    const originalName = normalizeFilename(file.originalname);
+    const dest = path.join(req.sessionOriginals, originalName);
+    const ext = path.extname(originalName).toLowerCase();
     if (ext === '.heic') {
       try {
         const outPath = dest.replace(/\.heic$/i, '.jpg');
@@ -97,7 +104,7 @@ app.post('/api/upload', upload.array('files'), async (req, res) => {
       }
     } else {
       fs.renameSync(file.path, dest);
-      results.push({ saved: file.originalname });
+      results.push({ saved: originalName });
     }
   }
   res.json(results);
